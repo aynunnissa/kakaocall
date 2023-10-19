@@ -28,6 +28,13 @@ function contactReducer(state: State, action: ContactActions) {
         contactList: contactListData,
       };
     }
+    case Types.Add: {
+      const newContactList = [...state.contactList, action.payload.contact];
+      localStorage.setItem('contacts', JSON.stringify(newContactList));
+      return {
+        contactList: newContactList,
+      };
+    }
     case Types.toggle_Favorite: {
       const contactCopy = state.contactList.map(contact => {
         if (contact.id === action.payload.id) {
