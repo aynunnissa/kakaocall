@@ -41,7 +41,8 @@ const shape = {
         md: '0.6rem',
         lg: '0.8rem',
         xl: '1.2rem'
-    }
+    },
+    circle: '50%'
 }
 
 export const theme = {
