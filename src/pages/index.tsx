@@ -11,6 +11,7 @@ import { Types } from '@/store/action/action';
 
 import Skeleton from '@/components/shared/Skeleton';
 import ContactItem from '@/components/contact/ContactItem';
+import { IContact } from '@/store/types/contact';
 
 const SkeletonContainer = css({
   display: 'flex',
@@ -44,6 +45,8 @@ const contactListStyle = css({
 
 const ContactPage = () => {
   const { state, dispatch } = useContact();
+  const [favoriteContacts, setFavoriteContacts] = useState<IContact[]>([]);
+  const [regularContacts, setRegularContacts] = useState<IContact[]>([]);
   const [contactSaved, setContactSaved] = useState(true);
   const { loading, data } = useQuery(contactList, {
     skip: contactSaved,
@@ -75,27 +78,39 @@ const ContactPage = () => {
     }
   }, [dispatch, data]);
 
+  useEffect(() => {
+    const favoriteList: IContact[] = [];
+    const regularList: IContact[] = [];
+
+    state.contactList.forEach(contact => {
+      if (contact.is_favorite) favoriteList.push(contact);
+      else regularList.push(contact);
+    });
+
+    setFavoriteContacts(favoriteList);
+    setRegularContacts(regularList);
+  }, [state.contactList]);
+
   return (
     <main>
       <div css={containerStyle}>
         <h1>Phone Book</h1>
       </div>
-      <div css={contactListContainer}>
-        <h2 css={subTitleText}>Contact List</h2>
-        <div css={contactListStyle}>
-          {loading ? (
-            <div css={SkeletonContainer}>
-              {[...Array(5)].map((num, ind) => (
-                <Skeleton
-                  key={`skeleton-${ind}`}
-                  customClass={{ height: '50px', width: '100%' }}
-                />
-              ))}
-            </div>
-          ) : (
-            state.contactList
-              .filter(contact => !contact.is_favorite)
-              .map((item, ind: number) => (
+      {favoriteContacts.length > 0 && (
+        <div css={contactListContainer}>
+          <h2 css={subTitleText}>Favorite</h2>
+          <div css={contactListStyle}>
+            {loading ? (
+              <div css={SkeletonContainer}>
+                {[...Array(2)].map((num, ind) => (
+                  <Skeleton
+                    key={`skeleton-${ind}`}
+                    customClass={{ height: '50px', width: '100%' }}
+                  />
+                ))}
+              </div>
+            ) : (
+              favoriteContacts.map((item, ind: number) => (
                 <ContactItem
                   key={`contact-${ind}`}
                   id={item.id}
@@ -105,6 +120,33 @@ const ContactPage = () => {
                   is_favorite={item.is_favorite}
                 />
               ))
+            )}
+          </div>
+        </div>
+      )}
+      <div css={contactListContainer}>
+        <h2 css={subTitleText}>Contact List</h2>
+        <div css={contactListStyle}>
+          {loading ? (
+            <div css={SkeletonContainer}>
+              {[...Array(3)].map((num, ind) => (
+                <Skeleton
+                  key={`skeleton-${ind}`}
+                  customClass={{ height: '50px', width: '100%' }}
+                />
+              ))}
+            </div>
+          ) : (
+            regularContacts.map((item, ind: number) => (
+              <ContactItem
+                key={`contact-${ind}`}
+                id={item.id}
+                first_name={item.first_name}
+                last_name={item.last_name}
+                phones={item.phones}
+                is_favorite={item.is_favorite}
+              />
+            ))
           )}
         </div>
       </div>
