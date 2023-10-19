@@ -1,9 +1,15 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from 'next/head';
+import Image from 'next/image';
+import { Inter } from 'next/font/google';
+import styles from '@/styles/Home.module.css';
+import { css } from '@emotion/react';
+import { theme } from '@theme';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
+
+const textStyle = css({
+  color: theme.palette.error.main,
+});
 
 export default function Home() {
   return (
@@ -16,7 +22,7 @@ export default function Home() {
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
         <div className={styles.description}>
-          <p>
+          <p css={textStyle}>
             Get started by editing&nbsp;
             <code className={styles.code}>src/pages/index.tsx</code>
           </p>
@@ -110,5 +116,5 @@ export default function Home() {
         </div>
       </main>
     </>
-  )
+  );
 }
