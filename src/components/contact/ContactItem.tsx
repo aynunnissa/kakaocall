@@ -1,3 +1,5 @@
+import { Types } from '@/store/action/action';
+import { useContact } from '@/store/context/contact-context';
 import { IContact } from '@/store/types/contact';
 import { css } from '@emotion/react';
 import { theme } from '@theme';
@@ -22,7 +24,7 @@ const avatarStyle = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: '1.5rem',
+  fontSize: theme.text.md,
 });
 
 const contactText = css({
@@ -39,14 +41,20 @@ const contactNumber = css(contactText, {
   color: theme.palette.grey[300],
 });
 
-const Icon = css({
-  // temp
-  width: '10px',
-  height: '30px',
-  backgroundColor: 'pink',
-});
-
 const ContactItem = (props: IContact) => {
+  const { dispatch } = useContact();
+
+  /**
+   * This method used to handle add contact to/remove contact from the favorite list
+   */
+  const toggleFavorite = () => {
+    dispatch({
+      type: Types.toggle_Favorite,
+      payload: {
+        id: props.id,
+      },
+    });
+  };
   return (
     <div css={contactContainer}>
       <div css={flexContainer}>
@@ -59,7 +67,12 @@ const ContactItem = (props: IContact) => {
         </div>
       </div>
       <div css={flexContainer}>
-        <div css={Icon}></div>
+        {props.is_favorite && (
+          <button onClick={toggleFavorite}>Remove fav</button>
+        )}
+        {!props.is_favorite && (
+          <button onClick={toggleFavorite}>Add fav</button>
+        )}
       </div>
     </div>
   );

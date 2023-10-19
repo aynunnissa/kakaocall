@@ -22,13 +22,25 @@ function contactReducer(state: State, action: ContactActions) {
   switch (action.type) {
     case Types.Load: {
       const contactListData = [...action.payload.contactList];
+
       localStorage.setItem('contacts', JSON.stringify(contactListData));
       return {
         contactList: contactListData,
       };
     }
-    default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
+    case Types.toggle_Favorite: {
+      const contactCopy = state.contactList.map(contact => {
+        if (contact.id === action.payload.id) {
+          return {
+            ...contact,
+            is_favorite: !contact.is_favorite,
+          };
+        }
+        return contact;
+      });
+      return {
+        contactList: contactCopy,
+      };
     }
   }
 }
