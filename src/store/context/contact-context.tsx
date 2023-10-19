@@ -42,9 +42,6 @@ function contactReducer(state: State, action: ContactActions) {
         contactList: contactCopy,
       };
     }
-    default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
-    }
   }
 }
 
