@@ -24,12 +24,16 @@ const containerStyle = css({
 
 const contactListContainer = css(containerStyle, {
   margin: `${theme.spacing.sm} ${theme.spacing.lg}`,
+  padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+  borderRadius: theme.shape.rounded.md,
+  boxShadow: theme.shadow.sm,
 });
 
 const subTitleText = css({
   color: theme.palette.primary.main,
   fontWeight: 700,
   fontSize: theme.text.md,
+  margin: `${theme.spacing.md} 0`,
 });
 
 const contactListStyle = css({
