@@ -1,0 +1,91 @@
+@font-face {
+    font-family: 'kakao-icon';
+    src:  url('../../public/assets/fonts/kakao-icon.eot?3btqne');
+    src:  url('../../public/assets/fonts/kakao-icon.eot?3btqne#iefix') format('embedded-opentype'),
+      url('../../public/assets/fonts/kakao-icon.ttf?3btqne') format('truetype'),
+      url('../../public/assets/fonts/kakao-icon.woff?3btqne') format('woff'),
+      url('../../public/assets/fonts/kakao-icon.svg?3btqne#kakao-icon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+  
+[class^="kao-"], [class*=" kao-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'kakao-icon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    font-size: large;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+  
+.kao-2x:before {
+	transform: scale(2);
+}
+.kao-1_5x:before {
+	transform: scale(1.5);
+}
+.kao-1_2x:before {
+	transform: scale(1.2);
+}
+.kao-0_5x:before {
+	transform: scale(0.5);
+}
+
+.kao-180:before {
+	transform: rotate(180deg);
+}
+
+
+.kao-dots-horizontal-triple:before {
+    content: "\e927";
+}
+.kao-chevron-left:before {
+    content: "\e90e";
+}
+.kao-chevron-right:before {
+    content: "\e90f";
+}
+.kao-phone1:before {
+    content: "\e932";
+}
+.kao-search:before {
+    content: "\e939";
+}
+.kao-person_add_alt:before {
+    content: "\e900";
+}
+.kao-arrow-left:before {
+    content: "\e903";
+}
+.kao-address-card-o:before {
+    content: "\e905";
+}
+.kao-phone-square:before {
+    content: "\e904";
+}
+.kao-trash-o:before {
+    content: "\e901";
+}
+.kao-edit:before {
+    content: "\e902";
+}
+.kao-pencil-square-o:before {
+    content: "\e902";
+}
+.kao-phone:before {
+    content: "\e942";
+}
+.kao-star-empty:before {
+    content: "\e9d7";
+}
+.kao-star-full:before {
+    content: "\e9d9";
+}

@@ -20,6 +20,9 @@ const palette = {
     error: {
         main: '#D32F2F',
     },
+    warning: {
+        main: '#FF9800'
+    },
     grey: {
         100: '#EEEEFA',
         200: '#ECEDED',
