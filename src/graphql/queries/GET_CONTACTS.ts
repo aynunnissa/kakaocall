@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-const contactList = gql`
+const GET_CONTACT_LIST = gql`
 query GetContactList(
   $distinct_on: [contact_select_column!]
   $limit: Int
@@ -26,4 +26,4 @@ query GetContactList(
 }
 `
 
-export default contactList;
+export default GET_CONTACT_LIST;
