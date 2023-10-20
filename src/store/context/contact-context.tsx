@@ -10,6 +10,7 @@ import { ContactActions, Types } from '@/store/action/action';
 
 type State = {
   contactList: IContact[];
+  isLoadingContact: boolean;
 };
 
 type ContactProviderProps = { children: ReactNode };
@@ -21,17 +22,21 @@ const ContactStateContext = createContext<
 function contactReducer(state: State, action: ContactActions) {
   switch (action.type) {
     case Types.Load: {
-      const contactListData = [...action.payload.contactList];
+      const contactListData = action.payload.contactList
+        ? [...action.payload.contactList]
+        : [];
 
       localStorage.setItem('contacts', JSON.stringify(contactListData));
       return {
         contactList: contactListData,
+        isLoadingContact: false,
       };
     }
     case Types.Add: {
+      // Based on the requirement, no need to save new added contacts to local storage
       const newContactList = [...state.contactList, action.payload.contact];
-      localStorage.setItem('contacts', JSON.stringify(newContactList));
       return {
+        ...state,
         contactList: newContactList,
       };
     }
@@ -46,6 +51,7 @@ function contactReducer(state: State, action: ContactActions) {
         return contact;
       });
       return {
+        ...state,
         contactList: contactCopy,
       };
     }
@@ -53,7 +59,10 @@ function contactReducer(state: State, action: ContactActions) {
 }
 
 function ContactProvider({ children }: ContactProviderProps) {
-  const [state, dispatch] = useReducer(contactReducer, { contactList: [] });
+  const [state, dispatch] = useReducer(contactReducer, {
+    contactList: [],
+    isLoadingContact: true,
+  });
 
   const value = { state, dispatch };
 
