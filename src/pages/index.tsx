@@ -13,18 +13,6 @@ import Link from 'next/link';
 import SearchContact from '@/components/contact/SearchContact';
 import Pagination from '@/components/shared/Pagination';
 
-const verticalStack = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing.sm,
-});
-
-const horizontalStack = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing.sm,
-});
-
 const containerStyle = css({
   padding: `0 ${theme.spacing.lg}`,
 });
@@ -36,7 +24,27 @@ const contactListContainer = css(containerStyle, {
   boxShadow: theme.shadow.normal,
 });
 
-const FlexContainer = css(horizontalStack, contactListContainer);
+const headerStyle = css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: theme.spacing.sm,
+  color: theme.palette.primary.main,
+});
+
+const verticalStack = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing.sm,
+});
+
+const linkItem = css({
+  textDecoration: 'none',
+
+  '> span': {
+    fontSize: theme.text.xxl,
+  },
+});
 
 const subTitleText = css({
   color: theme.palette.primary.main,
@@ -113,12 +121,14 @@ const ContactPage = () => {
 
   return (
     <main css={containerStyle}>
-      <div>
+      <div css={headerStyle}>
         <h1>Phone Book</h1>
+        <Link href="/add-contact" css={linkItem}>
+          <span className="kao-person_add_alt"></span>
+        </Link>
       </div>
-      <div css={FlexContainer}>
+      <div css={contactListContainer}>
         <SearchContact onSearch={handleSearch} />
-        <Link href="/add-contact">Add</Link>
       </div>
       {!onSearchMode && favoriteContacts.length > 0 && (
         <div css={contactListContainer}>
@@ -199,13 +209,20 @@ const ContactPage = () => {
           )}
         </div>
       )}
-      <div css={visibleContacts.length < 10 && absolutePagination}>
-        <Pagination
-          totalPages={Math.ceil(state.contactList.length / 10)}
-          currentPage={currentPage}
-          pageChanged={handlePageChanged}
-        />
-      </div>
+      {Math.ceil(regularContacts.length / 10) > 1 && (
+        <div
+          css={
+            visibleContacts.length + favoriteContacts.length < 10 &&
+            absolutePagination
+          }
+        >
+          <Pagination
+            totalPages={Math.ceil(regularContacts.length / 10)}
+            currentPage={currentPage}
+            pageChanged={handlePageChanged}
+          />
+        </div>
+      )}
     </main>
   );
 };

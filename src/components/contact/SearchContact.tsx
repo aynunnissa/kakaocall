@@ -13,11 +13,8 @@ const inputIcon = css({
   top: '50%',
   transform: 'translateY(-50%)',
   left: theme.spacing.sm,
-  // temp
-  width: '20px',
-  height: '20px',
-  borderRadius: '50%',
-  backgroundColor: 'pink',
+  fontWeight: 600,
+  color: theme.palette.grey[400],
 });
 
 const inputField = css({
@@ -41,7 +38,7 @@ const SearchContact = ({ onSearch }: IProps) => {
 
   return (
     <div css={inputContainer}>
-      <span css={inputIcon}></span>
+      <span css={inputIcon} className="kao-search"></span>
       <input
         type="text"
         name="searchContact"
