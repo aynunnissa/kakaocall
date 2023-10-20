@@ -20,6 +20,9 @@ const menuContainer = css({
 });
 
 const buttonStyle = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing.sm,
   border: 'none',
   backgroundColor: 'transparent',
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
@@ -38,15 +41,20 @@ const buttonStyle = css({
 
 const buttonLinkStyle = css(buttonStyle, {
   textDecoration: 'none',
-  display: 'inline-block',
 });
 
-const icon = css({
-  // temp
-  width: '10px',
-  height: '30px',
-  backgroundColor: 'pink',
+const iconButton = css({
   border: 'none',
+  backgroundColor: 'transparent',
+  padding: 0,
+});
+
+const editIconButton = css(buttonLinkStyle, {
+  color: theme.palette.primary.main,
+});
+
+const deleteIconButton = css(buttonStyle, {
+  color: theme.palette.error.main,
 });
 
 interface IProps {
@@ -88,17 +96,19 @@ const ContactDropdown = ({ onDelete, contactId }: IProps) => {
 
   return (
     <div css={dropdown} ref={ref}>
-      <button css={icon} onClick={toggleMenu}></button>
+      <button css={iconButton} onClick={toggleMenu}>
+        <span className="kao-dots-horizontal-triple"></span>
+      </button>
       {isMenuOpen && (
         <ul css={menuContainer}>
           <li>
-            <Link href={`/edit-contact/${contactId}`} css={buttonLinkStyle}>
-              Edit
+            <Link href={`/edit-contact/${contactId}`} css={editIconButton}>
+              <span className="kao-pencil-square-o"></span> Edit
             </Link>
           </li>
           <li>
-            <button css={buttonStyle} onClick={deleteContact}>
-              Delete
+            <button css={deleteIconButton} onClick={deleteContact}>
+              <span className="kao-trash-o"></span> Delete
             </button>
           </li>
         </ul>

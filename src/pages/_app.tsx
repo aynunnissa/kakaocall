@@ -2,6 +2,10 @@ import DefaultLayout from '@/components/layout/DefaultLayout';
 import client from '@/lib/client';
 import { ContactProvider } from '@/store/context/contact-context';
 import '@/styles/globals.css';
+/**
+ * Import icon fonts
+ */
+import '@/styles/icons.css';
 import { ApolloProvider } from '@apollo/client';
 import type { AppProps } from 'next/app';
 

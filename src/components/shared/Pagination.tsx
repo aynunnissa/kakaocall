@@ -18,7 +18,7 @@ const paginationList = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'end',
-  gap: theme.spacing.sm,
+  gap: theme.spacing.md,
   padding: 0,
   margin: `${theme.spacing.lg} 0`,
 });
@@ -27,6 +27,7 @@ const paginationButton = css({
   backgroundColor: 'transparent',
   border: 'none',
   color: theme.palette.grey[400],
+  fontSize: theme.text.md,
 });
 
 const activePaginationButton = css(paginationButton, {
@@ -132,7 +133,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
             aria-label="Go to previous page"
             onClick={onClickPreviousPage}
           >
-            <span className="bzi-chevron-left">{`<`}</span>
+            <span className="kao-chevron-left"></span>
           </button>
         </li>
 
@@ -228,7 +229,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
             aria-label="Go to next page"
             onClick={onClickNextPage}
           >
-            <span className="bzi-chevron-right">{`>`}</span>
+            <span className="kao-chevron-right"></span>
           </button>
         </li>
       </ul>

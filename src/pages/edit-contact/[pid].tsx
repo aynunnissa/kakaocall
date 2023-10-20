@@ -56,6 +56,15 @@ const submitButtonStyle = css({
   cursor: 'pointer',
 });
 
+const linkItem = css({
+  textDecoration: 'none',
+  color: theme.palette.common.black,
+
+  '> span': {
+    fontSize: theme.text.md,
+  },
+});
+
 /**
  * Regex to validate contact name: should not contains special Characters
  */
@@ -177,7 +186,9 @@ const EditContact = () => {
   return (
     <div css={containerStyle}>
       <div css={headerStyle}>
-        <Link href="/">{`<<<`}</Link>
+        <Link href="/" css={linkItem}>
+          <span className="kao-arrow-left"></span>
+        </Link>
         <h1>New Contact</h1>
       </div>
       <div css={mainContainerStyle}>

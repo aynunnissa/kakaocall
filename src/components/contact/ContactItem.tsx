@@ -42,6 +42,12 @@ const contactNumber = css(contactText, {
   color: theme.palette.grey[400],
 });
 
+const favoriteButtonStyle = css({
+  border: 'none',
+  backgroundColor: 'transparent',
+  color: theme.palette.warning.main,
+});
+
 const ContactItem = (props: IContact) => {
   const { dispatch } = useContact();
 
@@ -82,10 +88,14 @@ const ContactItem = (props: IContact) => {
       </div>
       <div css={flexContainer}>
         {props.is_favorite && (
-          <button onClick={toggleFavorite}>Remove fav</button>
+          <button onClick={toggleFavorite} css={favoriteButtonStyle}>
+            <span className="kao-star-full"></span>
+          </button>
         )}
         {!props.is_favorite && (
-          <button onClick={toggleFavorite}>Add fav</button>
+          <button onClick={toggleFavorite} css={favoriteButtonStyle}>
+            <span className="kao-star-empty"></span>
+          </button>
         )}
         <ContactDropdown onDelete={handleDelete} contactId={props.id} />
       </div>

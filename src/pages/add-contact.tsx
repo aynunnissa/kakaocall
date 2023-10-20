@@ -22,6 +22,15 @@ const headerStyle = css({
   gap: theme.spacing.md,
 });
 
+const linkItem = css({
+  textDecoration: 'none',
+  color: theme.palette.common.black,
+
+  '> span': {
+    fontSize: theme.text.md,
+  },
+});
+
 const mainContainerStyle = css({
   padding: theme.spacing.md,
   borderRadius: theme.shape.rounded.xl,
@@ -170,7 +179,9 @@ const AddContact = () => {
   return (
     <div css={containerStyle}>
       <div css={headerStyle}>
-        <Link href="/">{`<<<`}</Link>
+        <Link href="/" css={linkItem}>
+          <span className="kao-arrow-left"></span>
+        </Link>
         <h1>New Contact</h1>
       </div>
       <div css={mainContainerStyle}>
@@ -178,12 +189,12 @@ const AddContact = () => {
           <div>
             <input
               type="text"
-              id="firstName"
+              id="name"
               css={inputField}
               onChange={nameChangedHandler}
               onBlur={nameBlurHandler}
               value={enteredName}
-              placeholder="First name"
+              placeholder="Name"
             />
             {nameInputHasError && !enteredName && (
               <p css={errorTextStyle}>Name must not be empty</p>
