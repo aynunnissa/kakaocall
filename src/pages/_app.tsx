@@ -1,3 +1,4 @@
+import DefaultLayout from '@/components/layout/DefaultLayout';
 import client from '@/lib/client';
 import { ContactProvider } from '@/store/context/contact-context';
 import '@/styles/globals.css';
@@ -8,7 +9,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ContactProvider>
       <ApolloProvider client={client}>
-        <Component {...pageProps} />
+        <DefaultLayout>
+          <Component {...pageProps} />
+        </DefaultLayout>
       </ApolloProvider>
     </ContactProvider>
   );
