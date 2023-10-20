@@ -44,7 +44,6 @@ const SkeletonBaseStyle = css({
 });
 
 const Skeleton = ({ customClass }: IProps) => {
-  console.log(customClass);
   const SkeletonStyle = css(SkeletonBaseStyle, {
     ...customClass,
   });

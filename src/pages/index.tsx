@@ -12,6 +12,7 @@ import { Types } from '@/store/action/action';
 import Skeleton from '@/components/shared/Skeleton';
 import ContactItem from '@/components/contact/ContactItem';
 import { IContact } from '@/store/types/contact';
+import Link from 'next/link';
 
 const SkeletonContainer = css({
   display: 'flex',
@@ -44,39 +45,9 @@ const contactListStyle = css({
 });
 
 const ContactPage = () => {
-  const { state, dispatch } = useContact();
+  const { state } = useContact();
   const [favoriteContacts, setFavoriteContacts] = useState<IContact[]>([]);
   const [regularContacts, setRegularContacts] = useState<IContact[]>([]);
-  const [contactSaved, setContactSaved] = useState(true);
-  const { loading, data } = useQuery(contactList, {
-    skip: contactSaved,
-  });
-
-  useEffect(() => {
-    const savedContact = localStorage.getItem('contacts');
-
-    if (savedContact !== null) {
-      dispatch({
-        type: Types.Load,
-        payload: {
-          contactList: JSON.parse(savedContact),
-        },
-      });
-    }
-
-    setContactSaved(savedContact !== null);
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (data) {
-      dispatch({
-        type: Types.Load,
-        payload: {
-          contactList: data.contact,
-        },
-      });
-    }
-  }, [dispatch, data]);
 
   useEffect(() => {
     const favoriteList: IContact[] = [];
@@ -95,12 +66,13 @@ const ContactPage = () => {
     <main>
       <div css={containerStyle}>
         <h1>Phone Book</h1>
+        <Link href="/add-contact">Add</Link>
       </div>
       {favoriteContacts.length > 0 && (
         <div css={contactListContainer}>
           <h2 css={subTitleText}>Favorite</h2>
           <div css={contactListStyle}>
-            {loading ? (
+            {state.isLoadingContact ? (
               <div css={SkeletonContainer}>
                 {[...Array(2)].map((num, ind) => (
                   <Skeleton
@@ -127,7 +99,7 @@ const ContactPage = () => {
       <div css={contactListContainer}>
         <h2 css={subTitleText}>Contact List</h2>
         <div css={contactListStyle}>
-          {loading ? (
+          {state.isLoadingContact ? (
             <div css={SkeletonContainer}>
               {[...Array(3)].map((num, ind) => (
                 <Skeleton
