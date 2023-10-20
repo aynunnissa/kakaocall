@@ -40,6 +40,15 @@ function contactReducer(state: State, action: ContactActions) {
         contactList: newContactList,
       };
     }
+    case Types.Delete: {
+      const newContactList = state.contactList.filter(
+        contact => contact.id !== action.payload.id
+      );
+      return {
+        ...state,
+        contactList: newContactList,
+      };
+    }
     case Types.toggle_Favorite: {
       const contactCopy = state.contactList.map(contact => {
         if (contact.id === action.payload.id) {

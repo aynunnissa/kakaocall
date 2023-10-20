@@ -14,6 +14,7 @@ type ActionMap<M extends { [index: string]: any }> = {
 export enum Types {
   Load = 'LOAD_CONTACT',
   Add = 'ADD_CONTACT',
+  Delete = 'DELETE_CONTACT',
   toggle_Favorite = 'TOGGLE_FAVORITE',
 }
 
@@ -23,6 +24,9 @@ export type ContactPayload = {
   };
   [Types.Add]: {
     contact: IContact;
+  };
+  [Types.Delete]: {
+    id: number;
   };
   [Types.toggle_Favorite]: {
     id: number;
