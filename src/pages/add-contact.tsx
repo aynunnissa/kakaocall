@@ -33,7 +33,7 @@ const inputField = css({
   outline: 'none',
   border: 'none',
   borderRadius: '8px',
-  backgroundColor: '#E7E4EF',
+  backgroundColor: theme.palette.grey[100],
   width: '100%',
   margin: '5px 0px',
   boxSizing: 'border-box',

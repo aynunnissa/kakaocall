@@ -20,7 +20,7 @@ const shimmer = keyframes`
 `;
 
 const SkeletonBaseStyle = css({
-  backgroundColor: theme.palette.grey[100],
+  backgroundColor: theme.palette.grey[200],
   borderRadius: theme.shape.rounded.xl,
   position: 'relative',
   overflow: 'hidden',

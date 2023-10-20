@@ -39,7 +39,7 @@ const contactName = css(contactText, {
 
 const contactNumber = css(contactText, {
   fontSize: theme.text.xs,
-  color: theme.palette.grey[300],
+  color: theme.palette.grey[400],
 });
 
 const ContactItem = (props: IContact) => {
