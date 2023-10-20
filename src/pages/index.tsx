@@ -11,6 +11,7 @@ import ContactItem from '@/components/contact/ContactItem';
 import { IContact } from '@/store/types/contact';
 import Link from 'next/link';
 import SearchContact from '@/components/contact/SearchContact';
+import Pagination from '@/components/shared/Pagination';
 
 const verticalStack = css({
   display: 'flex',
@@ -25,14 +26,14 @@ const horizontalStack = css({
 });
 
 const containerStyle = css({
-  padding: `0 ${theme.spacing.md}`,
+  padding: `0 ${theme.spacing.lg}`,
 });
 
 const contactListContainer = css(containerStyle, {
-  margin: `${theme.spacing.sm} ${theme.spacing.lg}`,
+  margin: `${theme.spacing.sm} 0`,
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
   borderRadius: theme.shape.rounded.md,
-  boxShadow: theme.shadow.sm,
+  boxShadow: theme.shadow.normal,
 });
 
 const FlexContainer = css(horizontalStack, contactListContainer);
@@ -48,12 +49,27 @@ const notFoundText = css({
   textAlign: 'center',
 });
 
+/**
+ * This style is used to handle layout shifts due to changes in the number of contact items
+ */
+const absolutePagination = css({
+  position: 'absolute',
+  bottom: 0,
+  right: theme.spacing.lg,
+});
+
 const ContactPage = () => {
   const { state } = useContact();
   const [favoriteContacts, setFavoriteContacts] = useState<IContact[]>([]);
   const [regularContacts, setRegularContacts] = useState<IContact[]>([]);
+  const [visibleContacts, setVisibleContacts] = useState<IContact[]>([]);
   const [onSearchMode, setOnSearchMode] = useState(false);
   const [searchResult, setSearchResult] = useState<IContact[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChanged = (value: number) => {
+    setCurrentPage(value);
+  };
 
   /**
    * Function to handle contact search
@@ -86,9 +102,18 @@ const ContactPage = () => {
     setRegularContacts(regularList);
   }, [state.contactList]);
 
+  useEffect(() => {
+    if (currentPage < 1) return;
+
+    const startIndex = currentPage * 10 - 10;
+    const endIndex = currentPage * 10;
+
+    setVisibleContacts(regularContacts.slice(startIndex, endIndex));
+  }, [currentPage, regularContacts]);
+
   return (
-    <main>
-      <div css={containerStyle}>
+    <main css={containerStyle}>
+      <div>
         <h1>Phone Book</h1>
       </div>
       <div css={FlexContainer}>
@@ -137,7 +162,7 @@ const ContactPage = () => {
                 ))}
               </div>
             ) : (
-              regularContacts.map((item, ind: number) => (
+              visibleContacts.map((item, ind: number) => (
                 <ContactItem
                   key={`contact-${ind}`}
                   id={item.id}
@@ -174,6 +199,13 @@ const ContactPage = () => {
           )}
         </div>
       )}
+      <div css={visibleContacts.length < 10 && absolutePagination}>
+        <Pagination
+          totalPages={Math.ceil(state.contactList.length / 10)}
+          currentPage={currentPage}
+          pageChanged={handlePageChanged}
+        />
+      </div>
     </main>
   );
 };
