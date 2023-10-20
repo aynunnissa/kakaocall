@@ -40,6 +40,27 @@ function contactReducer(state: State, action: ContactActions) {
         contactList: newContactList,
       };
     }
+    case Types.Edit: {
+      // Based on the requirement, no need to save edited contacts to local storage
+      const editedContact = action.payload.contact;
+      const newContactList = state.contactList.map(contact => {
+        if (contact.id === editedContact.id) {
+          return {
+            ...contact,
+            first_name: editedContact.first_name,
+            last_name: editedContact.last_name,
+            phones: editedContact.phones,
+          };
+        }
+        return contact;
+      });
+
+      console.log(newContactList);
+      return {
+        ...state,
+        contactList: newContactList,
+      };
+    }
     case Types.Delete: {
       const newContactList = state.contactList.filter(
         contact => contact.id !== action.payload.id

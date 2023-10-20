@@ -1,15 +1,16 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 
-import addContact from '@/graphql/mutations/ADD_CONTACT_WITH_PHONES';
 import useInput from '@/hooks/use-input';
 import { useContact } from '@/store/context/contact-context';
 import { Types } from '@/store/action/action';
-import { useRouter } from 'next/navigation';
+import { useRouter as useNav } from 'next/navigation';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import GET_CONTACT_LIST from '@/graphql/queries/GET_CONTACTS';
 import { theme } from '@theme';
+import { IContact } from '@/store/types/contact';
 
 const containerStyle = css({
   minHeight: '100vh',
@@ -60,42 +61,24 @@ const submitButtonStyle = css({
  */
 const nameValidation = /^[a-zA-Z0-9\s]*$/;
 
-const AddContact = () => {
+const EditContact = () => {
+  const router = useRouter();
+  const nav = useNav();
+  const contactId = router.query.pid;
+
   const {
     value: enteredName,
     isValid: enteredNameIsValid,
     hasError: nameInputHasError,
     valueChangeHandler: nameChangedHandler,
+    defaultValueHandler: setDefaultValue,
     inputBlurHandler: nameBlurHandler,
   } = useInput((value: string) => nameValidation.test(value) && value);
 
   const { state, dispatch } = useContact();
-  const router = useRouter();
+  const [currentContact, setCurrentContact] = useState<IContact>();
   const [phoneFields, setPhoneFields] = useState([{ number: '' }]);
   const [formError, setFormError] = useState('');
-
-  const [submitContact] = useMutation(addContact, {
-    onCompleted({ insert_contact }) {
-      const addedContact = insert_contact?.returning?.[0];
-      if (addedContact) {
-        dispatch({
-          type: Types.Add,
-          payload: {
-            contact: addedContact,
-          },
-        });
-      }
-      router.push('/');
-    },
-    onError(error) {
-      const errorMessage = error.message ?? '';
-      if (errorMessage.includes('Uniqueness violation')) {
-        setFormError(
-          'Another contact with the same phone number already exists'
-        );
-      }
-    },
-  });
 
   /**
    * This query used to check if contact with the same Name already exists
@@ -114,7 +97,7 @@ const AddContact = () => {
   const formSubmissionHandler = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!enteredNameIsValid) {
+    if (!enteredNameIsValid || !currentContact) {
       return;
     }
 
@@ -134,9 +117,11 @@ const AddContact = () => {
      */
 
     const existingContact = state.contactList.find(contact => {
+      if (contact.id === currentContact.id) return false;
+
       const name = `${contact.first_name} ${contact.last_name}`;
-      const newContactName = `${firstName} ${lastName}`;
-      if (name.toLowerCase().includes(newContactName.toLowerCase())) {
+      const updatedName = `${firstName} ${lastName}`;
+      if (name.toLowerCase().includes(updatedName.toLowerCase())) {
         setFormError('Another contact with the same name already exists');
         return true;
       }
@@ -152,20 +137,42 @@ const AddContact = () => {
         },
       },
     });
+
     getExistingContact.then(result => {
       if (result?.data?.contact?.length > 0) {
         setFormError('Another contact with the same name already exists');
       } else {
-        submitContact({
-          variables: {
-            first_name: firstName,
-            last_name: lastName,
-            phones: phoneFields.filter(phone => phone.number),
+        dispatch({
+          type: Types.Edit,
+          payload: {
+            contact: {
+              ...currentContact,
+              first_name: firstName,
+              last_name: lastName,
+              phones: phoneFields.filter(phone => phone.number),
+            },
           },
         });
+        nav.push('/');
       }
     });
   };
+
+  useEffect(() => {
+    if (contactId) {
+      const contact = state.contactList.find(
+        contact => contact.id.toString() === contactId
+      );
+
+      if (!contact) {
+        return;
+      }
+
+      setCurrentContact(contact);
+      setDefaultValue(`${contact?.first_name} ${contact?.last_name}`);
+      setPhoneFields([...contact.phones, { number: '' }]);
+    }
+  }, [contactId, state.contactList]);
 
   return (
     <div css={containerStyle}>
@@ -210,7 +217,7 @@ const AddContact = () => {
 
           <div>
             <button css={submitButtonStyle} disabled={!enteredName}>
-              Save Contact
+              Update Contact
             </button>
           </div>
         </form>
@@ -219,4 +226,4 @@ const AddContact = () => {
   );
 };
 
-export default AddContact;
+export default EditContact;

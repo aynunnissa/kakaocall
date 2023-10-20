@@ -87,7 +87,7 @@ const ContactItem = (props: IContact) => {
         {!props.is_favorite && (
           <button onClick={toggleFavorite}>Add fav</button>
         )}
-        <ContactDropdown onDelete={handleDelete} />
+        <ContactDropdown onDelete={handleDelete} contactId={props.id} />
       </div>
     </div>
   );

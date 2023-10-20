@@ -1,13 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import { css } from '@emotion/react';
-import { useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 
 import { theme } from '@theme';
-import contactList from '@/graphql/queries/GET_CONTACTS';
 import { useContact } from '@/store/context/contact-context';
-import { Types } from '@/store/action/action';
 
 import Skeleton from '@/components/shared/Skeleton';
 import ContactItem from '@/components/contact/ContactItem';

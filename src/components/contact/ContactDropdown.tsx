@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { theme } from '@theme';
+import Link from 'next/link';
 
 const dropdown = css({
   position: 'relative',
@@ -22,13 +23,22 @@ const buttonStyle = css({
   border: 'none',
   backgroundColor: 'transparent',
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+  fontSize: theme.text.sm,
+  fontFamily: 'inherit',
+  color: theme.palette.common.black,
   cursor: 'pointer',
   width: '100%',
+  boxSizing: 'border-box',
   textAlign: 'left',
 
   '&:hover': {
     backgroundColor: theme.palette.primary.light,
   },
+});
+
+const buttonLinkStyle = css(buttonStyle, {
+  textDecoration: 'none',
+  display: 'inline-block',
 });
 
 const icon = css({
@@ -40,11 +50,11 @@ const icon = css({
 });
 
 interface IProps {
+  contactId: number;
   onDelete: () => void;
-  onEdit?: () => void;
 }
 
-const ContactDropdown = ({ onDelete }: IProps) => {
+const ContactDropdown = ({ onDelete, contactId }: IProps) => {
   const ref = useRef<any>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -82,7 +92,9 @@ const ContactDropdown = ({ onDelete }: IProps) => {
       {isMenuOpen && (
         <ul css={menuContainer}>
           <li>
-            <button css={buttonStyle}>Edit</button>
+            <Link href={`/edit-contact/${contactId}`} css={buttonLinkStyle}>
+              Edit
+            </Link>
           </li>
           <li>
             <button css={buttonStyle} onClick={deleteContact}>
