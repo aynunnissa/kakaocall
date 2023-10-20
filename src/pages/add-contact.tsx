@@ -69,7 +69,7 @@ const AddContact = () => {
     inputBlurHandler: nameBlurHandler,
   } = useInput((value: string) => nameValidation.test(value) && value);
 
-  const { dispatch } = useContact();
+  const { state, dispatch } = useContact();
   const router = useRouter();
   const [phoneFields, setPhoneFields] = useState([{ number: '' }]);
   const [formError, setFormError] = useState('');
@@ -128,8 +128,23 @@ const AddContact = () => {
         : arrName.slice(0, arrName.length - 1).join(' ');
     const lastName = arrName.length === 1 ? '' : arrName[arrName.length - 1];
 
-    // Check if contact name already exists
-    const x = getContactList({
+    /**
+     * This section will check if contact already exists
+     * If not, the update will be submitted
+     */
+
+    const existingContact = state.contactList.find(contact => {
+      const name = `${contact.first_name} ${contact.last_name}`;
+      const newContactName = `${firstName} ${lastName}`;
+      if (name.toLowerCase().includes(newContactName.toLowerCase())) {
+        setFormError('Another contact with the same name already exists');
+        return true;
+      }
+    });
+
+    if (existingContact) return;
+
+    const getExistingContact = getContactList({
       variables: {
         where: {
           first_name: { _ilike: firstName },
@@ -137,7 +152,7 @@ const AddContact = () => {
         },
       },
     });
-    x.then(result => {
+    getExistingContact.then(result => {
       if (result?.data?.contact?.length > 0) {
         setFormError('Another contact with the same name already exists');
       } else {
