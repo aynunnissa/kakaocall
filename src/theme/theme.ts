@@ -21,9 +21,10 @@ const palette = {
         main: '#D32F2F',
     },
     grey: {
-        100: '#ECEDED',
-        200: '#BDC4BE',
-        300: '#626262'
+        100: '#EEEEFA',
+        200: '#ECEDED',
+        300: '#BDC4BE',
+        400: '#626262'
     }
 }
 
