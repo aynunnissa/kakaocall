@@ -3,6 +3,7 @@ import { useContact } from '@/store/context/contact-context';
 import { IContact } from '@/store/types/contact';
 import { css } from '@emotion/react';
 import { theme } from '@theme';
+import ContactDropdown from './ContactDropdown';
 
 const flexContainer = css({
   display: 'flex',
@@ -55,6 +56,19 @@ const ContactItem = (props: IContact) => {
       },
     });
   };
+
+  /**
+   * Based on the requirements, the delete action do not use graphql
+   * Delete action will remove contact item from contactList (list of contact in local storage remain the same)
+   */
+  const handleDelete = () => {
+    dispatch({
+      type: Types.Delete,
+      payload: {
+        id: props.id,
+      },
+    });
+  };
   return (
     <div css={contactContainer}>
       <div css={flexContainer}>
@@ -73,6 +87,7 @@ const ContactItem = (props: IContact) => {
         {!props.is_favorite && (
           <button onClick={toggleFavorite}>Add fav</button>
         )}
+        <ContactDropdown onDelete={handleDelete} />
       </div>
     </div>
   );
