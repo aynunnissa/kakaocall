@@ -18,7 +18,7 @@ const dropdown = css({
 const iconButton = css({
   border: 'none',
   backgroundColor: 'transparent',
-  padding: 0,
+  padding: theme.spacing.md,
 });
 
 interface IProps {

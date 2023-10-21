@@ -30,6 +30,7 @@ const gridContainer = css({
 });
 
 const actionsColumnStyle = css(flexContainer, {
+  gap: 0,
   justifySelf: 'end',
 });
 
@@ -83,6 +84,7 @@ const favoriteButtonStyle = css({
   border: 'none',
   backgroundColor: 'transparent',
   color: theme.palette.warning.main,
+  padding: theme.spacing.md,
 });
 
 const ContactItem = (props: IContact) => {

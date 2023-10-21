@@ -47,6 +47,7 @@ const addLinkStyle = css({
   textDecoration: 'none',
   display: 'flex',
   fontSize: theme.text.xxl,
+  padding: `${theme.spacing.lg} 0 ${theme.spacing.lg} ${theme.spacing.lg}`,
 
   [theme.breakpoints.md]: {
     display: 'flex',
