@@ -14,14 +14,18 @@ import SearchContact from '@/components/contact/SearchContact';
 import Pagination from '@/components/shared/Pagination';
 
 const containerStyle = css({
-  padding: `0 ${theme.spacing.lg}`,
+  padding: `${theme.spacing.lg} ${theme.spacing.xl}`,
 });
 
 const contactListContainer = css(containerStyle, {
-  margin: `${theme.spacing.sm} 0`,
+  margin: `${theme.spacing.lg} 0`,
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
-  borderRadius: theme.shape.rounded.md,
+  borderRadius: theme.shape.rounded.xl,
   boxShadow: theme.shadow.normal,
+});
+
+const searchBox = css(contactListContainer, {
+  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
 });
 
 const headerStyle = css({
@@ -32,10 +36,22 @@ const headerStyle = css({
   color: theme.palette.primary.main,
 });
 
+const titleText = css({
+  fontSize: theme.text.xxl,
+
+  [theme.breakpoints.md]: {
+    fontSize: theme.text['2xl'],
+  },
+});
+
 const verticalStack = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing.sm,
+  gap: theme.spacing.lg,
+
+  [theme.breakpoints.md]: {
+    gap: theme.spacing.xl,
+  },
 });
 
 const linkItem = css({
@@ -51,10 +67,35 @@ const subTitleText = css({
   fontWeight: 700,
   fontSize: theme.text.md,
   margin: `${theme.spacing.md} 0`,
+
+  [theme.breakpoints.md]: {
+    fontSize: theme.text.xl,
+  },
 });
 
 const notFoundText = css({
   textAlign: 'center',
+});
+
+/**
+ * Style to handle header row on medium screen size
+ */
+const gridContainer = css({
+  display: 'none',
+
+  [theme.breakpoints.sm]: {
+    display: 'grid',
+    columnGap: theme.spacing.md,
+    gridTemplateColumns:
+      '[avatar] 4.5rem [contact] 3fr [phone] 2fr [actions] 3fr',
+    alignItems: 'center',
+    textAlign: 'left',
+    fontSize: theme.text.md,
+    color: theme.palette.grey[400],
+    fontWeight: 500,
+    borderBottom: `1px solid ${theme.palette.grey[300]}`,
+    marginBottom: theme.spacing.lg,
+  },
 });
 
 /**
@@ -122,12 +163,12 @@ const ContactPage = () => {
   return (
     <main css={containerStyle}>
       <div css={headerStyle}>
-        <h1>Phone Book</h1>
+        <h1 css={titleText}>Phone Book</h1>
         <Link href="/add-contact" css={linkItem}>
           <span className="kao-person_add_alt"></span>
         </Link>
       </div>
-      <div css={contactListContainer}>
+      <div css={searchBox}>
         <SearchContact onSearch={handleSearch} />
       </div>
       {!onSearchMode && favoriteContacts.length > 0 && (
@@ -161,6 +202,12 @@ const ContactPage = () => {
       {!onSearchMode && (
         <div css={contactListContainer}>
           <h2 css={subTitleText}>Contact List</h2>
+          <div css={gridContainer}>
+            <div></div>
+            <p>Name</p>
+            <p>Phone Number</p>
+            <div></div>
+          </div>
           <div css={verticalStack}>
             {state.isLoadingContact ? (
               <div css={verticalStack}>

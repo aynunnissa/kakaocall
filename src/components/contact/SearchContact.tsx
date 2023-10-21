@@ -18,10 +18,10 @@ const inputIcon = css({
 });
 
 const inputField = css({
-  padding: `${theme.spacing.sm} ${theme.spacing.sm} ${theme.spacing.sm} ${theme.spacing.xl}`,
+  padding: `${theme.spacing.md} ${theme.spacing.sm} ${theme.spacing.md} ${theme.spacing['2xl']}`,
   outline: 'none',
   border: 'none',
-  borderRadius: theme.shape.rounded.md,
+  borderRadius: theme.shape.rounded.xl,
   backgroundColor: theme.palette.grey[100],
   width: '100%',
   boxSizing: 'border-box',
