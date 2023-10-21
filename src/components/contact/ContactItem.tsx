@@ -4,6 +4,7 @@ import { IContact } from '@/store/types/contact';
 import { css } from '@emotion/react';
 import { theme } from '@theme';
 import ContactActions from './ContactActions';
+import Avatar from './Avatar';
 
 const flexContainer = css({
   display: 'flex',
@@ -32,19 +33,6 @@ const gridContainer = css({
 const actionsColumnStyle = css(flexContainer, {
   gap: '2px',
   justifySelf: 'end',
-});
-
-const avatarStyle = css({
-  objectFit: 'cover',
-  borderRadius: theme.shape.circle,
-  height: '4.5rem',
-  width: '4.5rem',
-  backgroundColor: 'pink',
-  flexShrink: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: theme.text.md,
 });
 
 const contactText = css({
@@ -116,7 +104,7 @@ const ContactItem = (props: IContact) => {
   };
   return (
     <div css={gridContainer}>
-      <div css={avatarStyle}>{props.first_name.charAt(0)}</div>
+      <Avatar initial={props.first_name.charAt(0)} />
       <div>
         <p css={contactName}>
           {props.first_name} {props.last_name}
