@@ -13,6 +13,7 @@ import { theme } from '@theme';
 import { IContact } from '@/store/types/contact';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
+import Head from 'next/head';
 
 const containerStyle = css({
   minHeight: '100vh',
@@ -207,61 +208,72 @@ const EditContact = () => {
   }, [contactId, state.contactList]);
 
   return (
-    <div>
-      <Header>
-        <Link href="/">
-          <span className="kao-arrow-left"></span>
-        </Link>
-        <h1>Phone Book</h1>
-      </Header>
-      <MainContainer>
-        <div css={mainContainerStyle}>
-          <div css={formContainerStyle}>
-            <h2 css={formTitleStyle}>Edit Contact</h2>
-            <form onSubmit={formSubmissionHandler}>
-              <div>
-                <input
-                  type="text"
-                  id="firstName"
-                  css={inputField}
-                  onChange={nameChangedHandler}
-                  onBlur={nameBlurHandler}
-                  value={enteredName}
-                  placeholder="First name"
-                />
-                {nameInputHasError && !enteredName && (
-                  <p css={errorTextStyle}>Name must not be empty</p>
-                )}
-                {nameInputHasError && enteredName && (
-                  <p css={errorTextStyle}>
-                    Name should not contain any special characters.
-                  </p>
-                )}
-                {phoneFields.map((field, ind) => {
-                  return (
-                    <input
-                      key={`phoneInput-${ind}`}
-                      id={`phoneInput-${ind}`}
-                      css={inputField}
-                      onChange={e => handlePhoneField(e, ind)}
-                      placeholder={`Phone ${ind + 1}`}
-                      value={field.number}
-                    />
-                  );
-                })}
-              </div>
-              {formError && <p css={errorTextStyle}>{formError}</p>}
+    <>
+      <Head>
+        <title>Edit Contact - Update Contact Information</title>
+        <meta
+          name="description"
+          content="Keep your contact list accurate and up-to-date with ease"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div>
+        <Header>
+          <Link href="/">
+            <span className="kao-arrow-left"></span>
+          </Link>
+          <h1>Phone Book</h1>
+        </Header>
+        <MainContainer>
+          <div css={mainContainerStyle}>
+            <div css={formContainerStyle}>
+              <h2 css={formTitleStyle}>Edit Contact</h2>
+              <form onSubmit={formSubmissionHandler}>
+                <div>
+                  <input
+                    type="text"
+                    id="firstName"
+                    css={inputField}
+                    onChange={nameChangedHandler}
+                    onBlur={nameBlurHandler}
+                    value={enteredName}
+                    placeholder="First name"
+                  />
+                  {nameInputHasError && !enteredName && (
+                    <p css={errorTextStyle}>Name must not be empty</p>
+                  )}
+                  {nameInputHasError && enteredName && (
+                    <p css={errorTextStyle}>
+                      Name should not contain any special characters.
+                    </p>
+                  )}
+                  {phoneFields.map((field, ind) => {
+                    return (
+                      <input
+                        key={`phoneInput-${ind}`}
+                        id={`phoneInput-${ind}`}
+                        css={inputField}
+                        onChange={e => handlePhoneField(e, ind)}
+                        placeholder={`Phone ${ind + 1}`}
+                        value={field.number}
+                      />
+                    );
+                  })}
+                </div>
+                {formError && <p css={errorTextStyle}>{formError}</p>}
 
-              <div>
-                <button css={submitButtonStyle} disabled={!enteredName}>
-                  Submit Update
-                </button>
-              </div>
-            </form>
+                <div>
+                  <button css={submitButtonStyle} disabled={!enteredName}>
+                    Submit Update
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      </MainContainer>
-    </div>
+        </MainContainer>
+      </div>
+    </>
   );
 };
 

@@ -11,6 +11,7 @@ import Pagination from '@/components/shared/Pagination';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import ContactList from '@/components/contact/ContactList';
+import Head from 'next/head';
 
 const contactListContainer = css({
   margin: `${theme.spacing.lg} 0`,
@@ -166,6 +167,15 @@ const ContactPage = () => {
 
   return (
     <div>
+      <Head>
+        <title>KakaoCall - Easily Manage Your Contact List</title>
+        <meta
+          name="description"
+          content="Browse and manage your contacts seamlessly. Access your full contact list, and easily identify your favorite contacts for quick communication."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Header justify="space-between">
         <h1>Phone Book</h1>
         <div css={headerRightSide}>
