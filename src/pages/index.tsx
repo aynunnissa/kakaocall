@@ -82,6 +82,12 @@ const notFoundText = css({
   textAlign: 'center',
 });
 
+const contactFoundText = css({
+  fontSize: theme.text.sm,
+  color: theme.palette.grey[400],
+  fontWeight: 400,
+});
+
 /**
  * This style is used to handle layout shifts due to changes in the number of contact items
  */
@@ -179,16 +185,28 @@ const ContactPage = () => {
           <SearchContact onSearch={handleSearch} />
         </div>
         {!onSearchMode && favoriteContacts.length > 0 && (
-          <ContactList contactListData={favoriteContacts} />
+          <ContactList title="Favorite" contactListData={favoriteContacts} />
         )}
-        {!onSearchMode && <ContactList contactListData={visibleContacts} />}
+        {!onSearchMode && (
+          <ContactList title="Contact List" contactListData={visibleContacts} />
+        )}
         {onSearchMode && searchResult.length <= 0 && (
           <div css={contactListContainer}>
             <p css={notFoundText}>Contact not found</p>
           </div>
         )}
         {onSearchMode && searchResult.length > 0 && (
-          <ContactList contactListData={searchResult} />
+          <ContactList
+            title={
+              <span>
+                Contact List{' '}
+                <span css={contactFoundText}>
+                  ({searchResult.length} found)
+                </span>
+              </span>
+            }
+            contactListData={searchResult}
+          />
         )}
         {totalPage > 1 && !onSearchMode && (
           <div
