@@ -27,7 +27,7 @@ const paginationButton = css({
   backgroundColor: 'transparent',
   border: 'none',
   color: theme.palette.grey[400],
-  fontSize: theme.text.lg,
+  fontSize: theme.text.md,
   padding: `${theme.spacing.sm} ${theme.spacing.md}`,
   cursor: 'pointer',
 
