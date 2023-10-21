@@ -11,6 +11,8 @@ import Link from 'next/link';
 import GET_CONTACT_LIST from '@/graphql/queries/GET_CONTACTS';
 import { theme } from '@theme';
 import { IContact } from '@/store/types/contact';
+import Header from '@/components/layout/Header';
+import MainContainer from '@/components/layout/MainContainer';
 
 const containerStyle = css({
   minHeight: '100vh',
@@ -24,13 +26,32 @@ const headerStyle = css({
 });
 
 const mainContainerStyle = css({
-  padding: theme.spacing.md,
+  display: 'flex',
+  justifyContent: 'center',
+});
+
+const formContainerStyle = css({
+  width: '450px',
+  maxWidth: '100%',
+  marginTop: theme.spacing.lg,
+  padding: `${theme.spacing.md} ${theme.spacing.lg}`,
   borderRadius: theme.shape.rounded.xl,
   boxShadow: theme.shadow.normal,
+
+  [theme.breakpoints.sm]: {
+    padding: `${theme.spacing.md} ${theme.spacing.xl}`,
+  },
+});
+
+const formTitleStyle = css({
+  fontSize: theme.text.xl,
+  fontWeight: 500,
+  color: theme.palette.primary.main,
+  textAlign: 'center',
 });
 
 const inputField = css({
-  padding: '0.75rem',
+  padding: `${theme.spacing.md} ${theme.spacing.lg}`,
   outline: 'none',
   border: 'none',
   borderRadius: '8px',
@@ -38,18 +59,20 @@ const inputField = css({
   width: '100%',
   margin: '5px 0px',
   boxSizing: 'border-box',
+  fontSize: theme.text.md,
 });
 
 const errorTextStyle = css({
   color: theme.palette.error.main,
   marginTop: theme.spacing.xs,
+  fontSize: theme.text.sm,
 });
 
 const submitButtonStyle = css({
   border: 'none',
   width: '100%',
-  margin: `${theme.spacing.sm} 0`,
-  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
+  margin: `${theme.spacing.lg} 0`,
+  padding: `${theme.spacing.md}`,
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.common.white,
   borderRadius: theme.shape.rounded.lg,
@@ -184,55 +207,60 @@ const EditContact = () => {
   }, [contactId, state.contactList]);
 
   return (
-    <div css={containerStyle}>
-      <div css={headerStyle}>
-        <Link href="/" css={linkItem}>
+    <div>
+      <Header>
+        <Link href="/">
           <span className="kao-arrow-left"></span>
         </Link>
-        <h1>New Contact</h1>
-      </div>
-      <div css={mainContainerStyle}>
-        <form onSubmit={formSubmissionHandler}>
-          <div>
-            <input
-              type="text"
-              id="firstName"
-              css={inputField}
-              onChange={nameChangedHandler}
-              onBlur={nameBlurHandler}
-              value={enteredName}
-              placeholder="First name"
-            />
-            {nameInputHasError && !enteredName && (
-              <p css={errorTextStyle}>Name must not be empty</p>
-            )}
-            {nameInputHasError && enteredName && (
-              <p css={errorTextStyle}>
-                Name should not contain any special characters.
-              </p>
-            )}
-            {phoneFields.map((field, ind) => {
-              return (
+        <h1>Phone Book</h1>
+      </Header>
+      <MainContainer>
+        <div css={mainContainerStyle}>
+          <div css={formContainerStyle}>
+            <h2 css={formTitleStyle}>Edit Contact</h2>
+            <form onSubmit={formSubmissionHandler}>
+              <div>
                 <input
-                  key={`phoneInput-${ind}`}
-                  id={`phoneInput-${ind}`}
+                  type="text"
+                  id="firstName"
                   css={inputField}
-                  onChange={e => handlePhoneField(e, ind)}
-                  placeholder={`Phone ${ind + 1}`}
-                  value={field.number}
+                  onChange={nameChangedHandler}
+                  onBlur={nameBlurHandler}
+                  value={enteredName}
+                  placeholder="First name"
                 />
-              );
-            })}
-          </div>
-          {formError && <p css={errorTextStyle}>{formError}</p>}
+                {nameInputHasError && !enteredName && (
+                  <p css={errorTextStyle}>Name must not be empty</p>
+                )}
+                {nameInputHasError && enteredName && (
+                  <p css={errorTextStyle}>
+                    Name should not contain any special characters.
+                  </p>
+                )}
+                {phoneFields.map((field, ind) => {
+                  return (
+                    <input
+                      key={`phoneInput-${ind}`}
+                      id={`phoneInput-${ind}`}
+                      css={inputField}
+                      onChange={e => handlePhoneField(e, ind)}
+                      placeholder={`Phone ${ind + 1}`}
+                      value={field.number}
+                    />
+                  );
+                })}
+              </div>
+              {formError && <p css={errorTextStyle}>{formError}</p>}
 
-          <div>
-            <button css={submitButtonStyle} disabled={!enteredName}>
-              Update Contact
-            </button>
+              <div>
+                <button css={submitButtonStyle} disabled={!enteredName}>
+                  Submit Update
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
+        </div>
+      </MainContainer>
     </div>
   );
 };
