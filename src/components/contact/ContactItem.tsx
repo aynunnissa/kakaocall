@@ -3,7 +3,7 @@ import { useContact } from '@/store/context/contact-context';
 import { IContact } from '@/store/types/contact';
 import { css } from '@emotion/react';
 import { theme } from '@theme';
-import ContactDropdown from './ContactDropdown';
+import ContactActions from './ContactActions';
 
 const flexContainer = css({
   display: 'flex',
@@ -135,7 +135,7 @@ const ContactItem = (props: IContact) => {
             <span className="kao-star-empty"></span>
           </button>
         )}
-        <ContactDropdown onDelete={handleDelete} contactId={props.id} />
+        <ContactActions onDelete={handleDelete} contactId={props.id} />
       </div>
     </div>
   );
