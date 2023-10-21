@@ -4,5 +4,6 @@ export const text = {
     md: '1.6rem',
     lg: '1.8rem',
     xl: '2rem',
-    xxl: '2.2rem'
+    xxl: '2.4rem',
+    '2xl': '3rem'
   };
