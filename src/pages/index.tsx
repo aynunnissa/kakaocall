@@ -6,14 +6,13 @@ import { useEffect, useState } from 'react';
 import { theme } from '@theme';
 import { useContact } from '@/store/context/contact-context';
 
-import Skeleton from '@/components/shared/Skeleton';
-import ContactItem from '@/components/contact/ContactItem';
 import { IContact } from '@/store/types/contact';
 import Link from 'next/link';
 import SearchContact from '@/components/contact/SearchContact';
 import Pagination from '@/components/shared/Pagination';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
+import ContactList from '@/components/contact/ContactList';
 
 const contactListContainer = css({
   margin: `${theme.spacing.lg} 0`,
@@ -78,57 +77,9 @@ const headerRightSide = css({
   gap: theme.spacing.md,
 });
 
-const verticalStack = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing.lg,
-
-  [theme.breakpoints.md]: {
-    gap: theme.spacing.xl,
-  },
-});
-
-const subTitleText = css({
-  color: theme.palette.primary.main,
-  fontWeight: 700,
-  fontSize: theme.text.md,
-  margin: `${theme.spacing.md} 0`,
-
-  [theme.breakpoints.md]: {
-    fontSize: theme.text.xl,
-  },
-});
-
 const notFoundText = css({
   fontSize: theme.text.md,
   textAlign: 'center',
-});
-
-const contactFoundText = css({
-  fontSize: theme.text.sm,
-  color: theme.palette.grey[400],
-  fontWeight: 400,
-});
-
-/**
- * Style to handle header row on medium screen size
- */
-const gridContainer = css({
-  display: 'none',
-
-  [theme.breakpoints.sm]: {
-    display: 'grid',
-    columnGap: theme.spacing.md,
-    gridTemplateColumns:
-      '[avatar] 4.5rem [contact] 3fr [phone] 2fr [actions] 3fr',
-    alignItems: 'center',
-    textAlign: 'left',
-    fontSize: theme.text.md,
-    color: theme.palette.grey[400],
-    fontWeight: 500,
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
-    marginBottom: theme.spacing.lg,
-  },
 });
 
 /**
@@ -228,95 +179,16 @@ const ContactPage = () => {
           <SearchContact onSearch={handleSearch} />
         </div>
         {!onSearchMode && favoriteContacts.length > 0 && (
+          <ContactList contactListData={favoriteContacts} />
+        )}
+        {!onSearchMode && <ContactList contactListData={visibleContacts} />}
+        {onSearchMode && searchResult.length <= 0 && (
           <div css={contactListContainer}>
-            <h2 css={subTitleText}>Favorite</h2>
-            <div css={verticalStack}>
-              {state.isLoadingContact ? (
-                <div css={verticalStack}>
-                  {[...Array(3)].map((num, ind) => (
-                    <Skeleton
-                      key={`skeleton-${ind}`}
-                      customClass={{ height: '50px', width: '100%' }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                favoriteContacts.map((item, ind: number) => (
-                  <ContactItem
-                    key={`contact-${ind}`}
-                    id={item.id}
-                    first_name={item.first_name}
-                    last_name={item.last_name}
-                    phones={item.phones}
-                    is_favorite={item.is_favorite}
-                  />
-                ))
-              )}
-            </div>
+            <p css={notFoundText}>Contact not found</p>
           </div>
         )}
-        {!onSearchMode && (
-          <div css={contactListContainer}>
-            <h2 css={subTitleText}>Contact List</h2>
-            <div css={gridContainer}>
-              <div></div>
-              <p>Name</p>
-              <p>Phone Number</p>
-              <div></div>
-            </div>
-            <div css={verticalStack}>
-              {state.isLoadingContact || isLoadingPage ? (
-                <div css={verticalStack}>
-                  {[...Array(5)].map((num, ind) => (
-                    <Skeleton
-                      key={`skeleton-${ind}`}
-                      customClass={{ height: '50px', width: '100%' }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                visibleContacts.map((item, ind: number) => (
-                  <ContactItem
-                    key={`contact-${ind}`}
-                    id={item.id}
-                    first_name={item.first_name}
-                    last_name={item.last_name}
-                    phones={item.phones}
-                    is_favorite={item.is_favorite}
-                  />
-                ))
-              )}
-            </div>
-          </div>
-        )}
-        {onSearchMode && (
-          <div css={contactListContainer}>
-            {searchResult.length > 0 ? (
-              <div>
-                <h2 css={subTitleText}>
-                  Contact List{' '}
-                  <span css={contactFoundText}>
-                    ({searchResult.length} found)
-                  </span>
-                </h2>
-
-                <div css={verticalStack}>
-                  {searchResult.map((item, ind: number) => (
-                    <ContactItem
-                      key={`contact-${ind}`}
-                      id={item.id}
-                      first_name={item.first_name}
-                      last_name={item.last_name}
-                      phones={item.phones}
-                      is_favorite={item.is_favorite}
-                    />
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <p css={notFoundText}>Contact not found</p>
-            )}
-          </div>
+        {onSearchMode && searchResult.length > 0 && (
+          <ContactList contactListData={searchResult} />
         )}
         {totalPage > 1 && !onSearchMode && (
           <div
