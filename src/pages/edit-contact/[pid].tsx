@@ -219,12 +219,7 @@ const EditContact = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Header>
-          <Link href="/">
-            <span className="kao-arrow-left"></span>
-          </Link>
-          <h1>Phone Book</h1>
-        </Header>
+        <Header />
         <MainContainer>
           <div css={mainContainerStyle}>
             <div css={formContainerStyle}>

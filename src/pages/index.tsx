@@ -29,7 +29,7 @@ const searchBox = css(contactListContainer, {
   },
 });
 
-const mobileSearchBox = css({
+const desktopSearchBox = css({
   display: 'none',
 
   [theme.breakpoints.md]: {
@@ -70,6 +70,11 @@ const addTextStyle = css({
   [theme.breakpoints.md]: {
     display: 'inline',
   },
+});
+
+const addIconStyle = css({
+  color: theme.palette.primary.main,
+  fontSize: theme.text['2xl'],
 });
 
 const headerRightSide = css({
@@ -178,13 +183,12 @@ const ContactPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header justify="space-between">
-        <h1>Phone Book</h1>
         <div css={headerRightSide}>
-          <div css={mobileSearchBox}>
+          <div css={desktopSearchBox}>
             <SearchContact onSearch={handleSearch} />
           </div>
           <Link href="/add-contact" css={addLinkStyle}>
-            <span className="kao-person_add_alt"></span>
+            <span css={addIconStyle} className="kao-person_add_alt"></span>
             <span css={addTextStyle}>Add contact</span>
           </Link>
         </div>

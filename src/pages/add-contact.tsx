@@ -6,7 +6,7 @@ import addContact from '@/graphql/mutations/ADD_CONTACT_WITH_PHONES';
 import useInput from '@/hooks/use-input';
 import { useContact } from '@/store/context/contact-context';
 import { Types } from '@/store/action/action';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import GET_CONTACT_LIST from '@/graphql/queries/GET_CONTACTS';
 import { theme } from '@theme';
@@ -192,12 +192,7 @@ const AddContact = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Header>
-          <Link href="/">
-            <span className="kao-arrow-left"></span>
-          </Link>
-          <h1>Phone Book</h1>
-        </Header>
+        <Header />
         <MainContainer>
           <div css={mainContainerStyle}>
             <div css={formContainerStyle}>
