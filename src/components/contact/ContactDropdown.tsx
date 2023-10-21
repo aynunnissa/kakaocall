@@ -3,8 +3,18 @@ import { css } from '@emotion/react';
 import { theme } from '@theme';
 import Link from 'next/link';
 
+const horizontalFlex = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing.sm,
+});
+
 const dropdown = css({
   position: 'relative',
+
+  [theme.breakpoints.md]: {
+    display: 'none',
+  },
 });
 
 const menuContainer = css({
@@ -15,14 +25,18 @@ const menuContainer = css({
   right: 0,
   zIndex: 1001,
   margin: 0,
-  boxShadow: theme.shadow.sm,
   borderRadius: theme.shape.rounded.sm,
 });
 
-const buttonStyle = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing.sm,
+const inlineActions = css(horizontalFlex, {
+  display: 'none',
+
+  [theme.breakpoints.md]: {
+    display: 'flex',
+  },
+});
+
+const buttonStyle = css(horizontalFlex, {
   border: 'none',
   backgroundColor: 'transparent',
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
@@ -36,6 +50,15 @@ const buttonStyle = css({
 
   '&:hover': {
     backgroundColor: theme.palette.primary.light,
+  },
+
+  [theme.breakpoints.sm]: {
+    padding: `${theme.spacing.sm}`,
+  },
+
+  [theme.breakpoints.md]: {
+    padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+    boxShadow: theme.shadow.md,
   },
 });
 
@@ -51,10 +74,30 @@ const iconButton = css({
 
 const editIconButton = css(buttonLinkStyle, {
   color: theme.palette.primary.main,
+
+  [theme.breakpoints.md]: {
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: theme.shape.rounded.md,
+
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  },
 });
 
 const deleteIconButton = css(buttonStyle, {
   color: theme.palette.error.main,
+
+  [theme.breakpoints.md]: {
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.error.main,
+    borderRadius: theme.shape.rounded.md,
+
+    '&:hover': {
+      backgroundColor: theme.palette.error.dark,
+    },
+  },
 });
 
 interface IProps {
@@ -95,24 +138,34 @@ const ContactDropdown = ({ onDelete, contactId }: IProps) => {
   }, [isMenuOpen]);
 
   return (
-    <div css={dropdown} ref={ref}>
-      <button css={iconButton} onClick={toggleMenu}>
-        <span className="kao-dots-horizontal-triple"></span>
-      </button>
-      {isMenuOpen && (
-        <ul css={menuContainer}>
-          <li>
-            <Link href={`/edit-contact/${contactId}`} css={editIconButton}>
-              <span className="kao-pencil-square-o"></span> Edit
-            </Link>
-          </li>
-          <li>
-            <button css={deleteIconButton} onClick={deleteContact}>
-              <span className="kao-trash-o"></span> Delete
-            </button>
-          </li>
-        </ul>
-      )}
+    <div>
+      <div css={dropdown} ref={ref}>
+        <button css={iconButton} onClick={toggleMenu}>
+          <span className="kao-dots-horizontal-triple"></span>
+        </button>
+        {isMenuOpen && (
+          <ul css={menuContainer}>
+            <li>
+              <Link href={`/edit-contact/${contactId}`} css={editIconButton}>
+                <span className="kao-pencil-square-o"></span> Edit
+              </Link>
+            </li>
+            <li>
+              <button css={deleteIconButton} onClick={deleteContact}>
+                <span className="kao-trash-o"></span> Delete
+              </button>
+            </li>
+          </ul>
+        )}
+      </div>
+      <div css={inlineActions}>
+        <Link href={`/edit-contact/${contactId}`} css={editIconButton}>
+          <span className="kao-pencil-square-o"></span> Edit
+        </Link>
+        <button css={deleteIconButton} onClick={deleteContact}>
+          <span className="kao-trash-o"></span> Delete
+        </button>
+      </div>
     </div>
   );
 };

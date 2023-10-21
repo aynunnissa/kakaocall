@@ -15,6 +15,24 @@ const contactContainer = css(flexContainer, {
   justifyContent: 'space-between',
 });
 
+const gridContainer = css({
+  display: 'grid',
+  gridTemplateColumns: '[avatar] 4.5rem [contact] 3fr [actions] 1fr',
+  columnGap: theme.spacing.sm,
+  rowGap: theme.spacing.md,
+  alignItems: 'center',
+
+  [theme.breakpoints.sm]: {
+    columnGap: theme.spacing.md,
+    gridTemplateColumns:
+      '[avatar] 4.5rem [contact] 3fr [phone] 2fr [actions] 3fr',
+  },
+});
+
+const actionsColumnStyle = css(flexContainer, {
+  justifySelf: 'end',
+});
+
 const avatarStyle = css({
   objectFit: 'cover',
   borderRadius: theme.shape.circle,
@@ -35,14 +53,33 @@ const contactText = css({
 const contactName = css(contactText, {
   fontSize: theme.text.md,
   fontWeight: 500,
+
+  [theme.breakpoints.md]: {
+    fontSize: theme.text.lg,
+  },
 });
 
 const contactNumber = css(contactText, {
   fontSize: theme.text.xs,
   color: theme.palette.grey[400],
+
+  [theme.breakpoints.sm]: {
+    display: 'none',
+  },
+});
+
+const listContactNumber = css({
+  display: 'none',
+
+  [theme.breakpoints.sm]: {
+    display: 'block',
+    fontSize: theme.text.md,
+    color: theme.palette.grey[400],
+  },
 });
 
 const favoriteButtonStyle = css({
+  cursor: 'pointer',
   border: 'none',
   backgroundColor: 'transparent',
   color: theme.palette.warning.main,
@@ -76,17 +113,18 @@ const ContactItem = (props: IContact) => {
     });
   };
   return (
-    <div css={contactContainer}>
-      <div css={flexContainer}>
-        <div css={avatarStyle}>{props.first_name.charAt(0)}</div>
-        <div>
-          <p css={contactName}>
-            {props.first_name} {props.last_name}
-          </p>
-          <p css={contactNumber}>{props.phones?.[0]?.number}</p>
-        </div>
+    <div css={gridContainer}>
+      <div css={avatarStyle}>{props.first_name.charAt(0)}</div>
+      <div>
+        <p css={contactName}>
+          {props.first_name} {props.last_name}
+        </p>
+        <p css={contactNumber}>{props.phones?.[0]?.number}</p>
       </div>
-      <div css={flexContainer}>
+      <div css={listContactNumber}>
+        <p>{props.phones?.[0]?.number}</p>
+      </div>
+      <div css={actionsColumnStyle}>
         {props.is_favorite && (
           <button onClick={toggleFavorite} css={favoriteButtonStyle}>
             <span className="kao-star-full"></span>
