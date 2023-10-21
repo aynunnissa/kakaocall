@@ -1,7 +1,4 @@
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
-
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import { theme } from '@theme';
 import Link from 'next/link';

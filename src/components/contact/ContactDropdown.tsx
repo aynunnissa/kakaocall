@@ -1,8 +1,11 @@
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
 import { css } from '@emotion/react';
 import { theme } from '@theme';
-import Link from 'next/link';
 
-import { useEffect, useState, useRef, ReactNode } from 'react';
+import { useEffect, useRef, ReactNode } from 'react';
+import Skeleton from '../shared/Skeleton';
 
 const dropdown = css({
   position: 'relative',
@@ -10,17 +13,6 @@ const dropdown = css({
   [theme.breakpoints.md]: {
     display: 'none',
   },
-});
-
-const menuContainer = css({
-  listStyle: 'none',
-  position: 'absolute',
-  backgroundColor: theme.palette.common.white,
-  padding: 0,
-  right: 0,
-  zIndex: 1001,
-  margin: 0,
-  borderRadius: theme.shape.rounded.sm,
 });
 
 const iconButton = css({
@@ -36,12 +28,11 @@ interface IProps {
   onDeleteContact: () => void;
 }
 
-const ContactDropdown = ({
-  children,
-  isMenuOpen,
-  toggleMenu,
-  onDeleteContact,
-}: IProps) => {
+const DropdownModal = dynamic(() => import('./DropdownModal'), {
+  suspense: true,
+});
+
+const ContactDropdown = ({ children, isMenuOpen, toggleMenu }: IProps) => {
   const ref = useRef<any>(null);
 
   /**
@@ -67,7 +58,17 @@ const ContactDropdown = ({
       <button css={iconButton} onClick={toggleMenu}>
         <span className="kao-dots-horizontal-triple"></span>
       </button>
-      {isMenuOpen && <ul css={menuContainer}>{children}</ul>}
+      {isMenuOpen && (
+        <Suspense
+          fallback={
+            <Skeleton
+              customClass={{ height: '100px', width: '100px' }}
+            ></Skeleton>
+          }
+        >
+          <DropdownModal>{children}</DropdownModal>
+        </Suspense>
+      )}
     </div>
   );
 };
