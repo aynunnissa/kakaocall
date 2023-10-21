@@ -18,7 +18,7 @@ const paginationList = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'end',
-  gap: theme.spacing.md,
+  gap: theme.spacing.lg,
   padding: 0,
   margin: `${theme.spacing.lg} 0`,
 });
@@ -28,6 +28,12 @@ const paginationButton = css({
   border: 'none',
   color: theme.palette.grey[400],
   fontSize: theme.text.md,
+  padding: 0,
+  cursor: 'pointer',
+
+  [theme.breakpoints.md]: {
+    fontSize: theme.text.lg,
+  },
 });
 
 const activePaginationButton = css(paginationButton, {
@@ -83,10 +89,6 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
       return pageChanged(totalPages);
     }
     pageChanged(pageTarget);
-  };
-
-  const isPageActive = (page: number) => {
-    return currentPage === page;
   };
 
   useEffect(() => {
