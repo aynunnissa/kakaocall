@@ -6,12 +6,13 @@ import addContact from '@/graphql/mutations/ADD_CONTACT_WITH_PHONES';
 import useInput from '@/hooks/use-input';
 import { useContact } from '@/store/context/contact-context';
 import { Types } from '@/store/action/action';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import GET_CONTACT_LIST from '@/graphql/queries/GET_CONTACTS';
 import { theme } from '@theme';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
+import Head from 'next/head';
 
 const mainContainerStyle = css({
   display: 'flex',
@@ -180,61 +181,71 @@ const AddContact = () => {
   };
 
   return (
-    <div>
-      <Header>
-        <Link href="/">
-          <span className="kao-arrow-left"></span>
-        </Link>
-        <h1>Phone Book</h1>
-      </Header>
-      <MainContainer>
-        <div css={mainContainerStyle}>
-          <div css={formContainerStyle}>
-            <h2 css={formTitleStyle}>Create Contact</h2>
-            <form onSubmit={formSubmissionHandler}>
-              <div>
-                <input
-                  type="text"
-                  id="name"
-                  css={inputField}
-                  onChange={nameChangedHandler}
-                  onBlur={nameBlurHandler}
-                  value={enteredName}
-                  placeholder="Name"
-                />
-                {nameInputHasError && !enteredName && (
-                  <p css={errorTextStyle}>Name must not be empty</p>
-                )}
-                {nameInputHasError && enteredName && (
-                  <p css={errorTextStyle}>
-                    Name should not contain any special characters.
-                  </p>
-                )}
-                {phoneFields.map((field, ind) => {
-                  return (
-                    <input
-                      key={`phoneInput-${ind}`}
-                      id={`phoneInput-${ind}`}
-                      css={inputField}
-                      onChange={e => handlePhoneField(e, ind)}
-                      placeholder={`Phone ${ind + 1}`}
-                      value={field.number}
-                    />
-                  );
-                })}
-              </div>
-              {formError && <p css={errorTextStyle}>{formError}</p>}
+    <>
+      <Head>
+        <title>Add Contact - Effortlessly Expand Your Contact List</title>
+        <meta
+          name="description"
+          content="Create new contacts and effortlessly organize your connections. Stay connected with ease."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/kakaoico.ico" />
+      </Head>
+      <div>
+        <Header />
+        <MainContainer>
+          <div css={mainContainerStyle}>
+            <div css={formContainerStyle}>
+              <h2 css={formTitleStyle}>Create Contact</h2>
+              <form onSubmit={formSubmissionHandler}>
+                <div>
+                  <input
+                    type="text"
+                    id="name"
+                    css={inputField}
+                    onChange={nameChangedHandler}
+                    onBlur={nameBlurHandler}
+                    value={enteredName}
+                    placeholder="Name"
+                  />
+                  {nameInputHasError && !enteredName && (
+                    <p css={errorTextStyle}>Name must not be empty</p>
+                  )}
+                  {nameInputHasError && enteredName && (
+                    <p css={errorTextStyle}>
+                      Name should not contain any special characters.
+                    </p>
+                  )}
+                  {phoneFields.map((field, ind) => {
+                    return (
+                      <input
+                        key={`phoneInput-${ind}`}
+                        id={`phoneInput-${ind}`}
+                        css={inputField}
+                        onChange={e => handlePhoneField(e, ind)}
+                        placeholder={`Phone ${ind + 1}`}
+                        value={field.number}
+                      />
+                    );
+                  })}
+                </div>
+                {formError && <p css={errorTextStyle}>{formError}</p>}
 
-              <div>
-                <button css={submitButtonStyle} disabled={!enteredName}>
-                  Save Contact
-                </button>
-              </div>
-            </form>
+                <div>
+                  <button
+                    css={submitButtonStyle}
+                    disabled={!enteredName}
+                    aria-label="Save Contact"
+                  >
+                    Save Contact
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      </MainContainer>
-    </div>
+        </MainContainer>
+      </div>
+    </>
   );
 };
 

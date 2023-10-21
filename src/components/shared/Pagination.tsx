@@ -18,7 +18,7 @@ const paginationList = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'end',
-  gap: theme.spacing.lg,
+  // gap: theme.spacing.lg,
   padding: 0,
   margin: `${theme.spacing.lg} 0`,
 });
@@ -28,12 +28,16 @@ const paginationButton = css({
   border: 'none',
   color: theme.palette.grey[400],
   fontSize: theme.text.md,
-  padding: 0,
+  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
   cursor: 'pointer',
 
   [theme.breakpoints.md]: {
     fontSize: theme.text.lg,
   },
+});
+
+const paginationLastArrow = css(paginationButton, {
+  padding: `${theme.spacing.sm} 0 ${theme.spacing.sm} ${theme.spacing.md}`,
 });
 
 const activePaginationButton = css(paginationButton, {
@@ -147,7 +151,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
               ${currentPage === 1 ? activePaginationButton : paginationButton}
             `}
             disabled={isInFirstPage}
-            aria-label="Go to first page"
+            aria-label="Go to page number 1"
             onClick={onClickFirstPage}
           >
             1
@@ -214,7 +218,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
                   : paginationButton}
               `}
               disabled={isInLastPage}
-              aria-label="Go to last page"
+              aria-label={`Go to page number ${totalPages}`}
               onClick={onClickLastPage}
             >
               {totalPages}
@@ -226,7 +230,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
         <li className="pagination-item">
           <button
             type="button"
-            css={paginationButton}
+            css={paginationLastArrow}
             disabled={isInLastPage}
             aria-label="Go to next page"
             onClick={onClickNextPage}

@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { useContact } from '@/store/context/contact-context';
 import Skeleton from '../shared/Skeleton';
 import { IContact } from '@/store/types/contact';
+import { ReactNode } from 'react';
 
 const contactListContainer = css({
   margin: `${theme.spacing.lg} 0`,
@@ -54,17 +55,17 @@ const gridContainer = css({
   },
 });
 
-const ContactList = ({
-  contactListData,
-  isLoadingPage,
-}: {
+interface IProps {
+  title: ReactNode;
   contactListData: IContact[];
   isLoadingPage?: boolean;
-}) => {
+}
+
+const ContactList = ({ title, contactListData, isLoadingPage }: IProps) => {
   const { state } = useContact();
   return (
     <div css={contactListContainer}>
-      <h2 css={subTitleText}>Favorite</h2>
+      <h2 css={subTitleText}>{title}</h2>
       <div css={gridContainer}>
         <div></div>
         <p>Name</p>
@@ -74,7 +75,7 @@ const ContactList = ({
       <div css={verticalStack}>
         {state.isLoadingContact || isLoadingPage ? (
           <div css={verticalStack}>
-            {[...Array(3)].map((num, ind) => (
+            {[...Array(4)].map((num, ind) => (
               <Skeleton
                 key={`skeleton-${ind}`}
                 customClass={{ height: '50px', width: '100%' }}

@@ -14,6 +14,7 @@ const inputIcon = css({
   transform: 'translateY(-50%)',
   left: theme.spacing.sm,
   fontWeight: 600,
+  fontSize: theme.text.lg,
   color: theme.palette.grey[400],
 });
 

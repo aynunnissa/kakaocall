@@ -1,26 +1,26 @@
 {
-    "name": "PWA App",
-    "short_name": "App",
+    "name": "KakaoCall",
+    "short_name": "Kakao",
     "icons": [
       {
-        "src": "/icons/android-chrome-192x192.png",
-        "sizes": "192x192",
+        "src": "/icons/icon-192",
+        "sizes": "192x197",
         "type": "image/png",
         "purpose": "any maskable"
       },
       {
-        "src": "/icons/android-chrome-384x384.png",
-        "sizes": "384x384",
+        "src": "/icons/icon-384",
+        "sizes": "384x393",
         "type": "image/png"
       },
       {
-        "src": "/icons/icon-512x512.png",
-        "sizes": "512x512",
+        "src": "/icons/icon-512.png",
+        "sizes": "512x524",
         "type": "image/png"
       }
     ],
-    "theme_color": "#FFFFFF",
-    "background_color": "#FFFFFF",
+    "theme_color": "#F5F8FE",
+    "background_color": "#F5F8FE",
     "start_url": "/",
     "display": "standalone",
     "orientation": "portrait"

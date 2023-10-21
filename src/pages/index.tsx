@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 
@@ -13,6 +11,8 @@ import Pagination from '@/components/shared/Pagination';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import ContactList from '@/components/contact/ContactList';
+import Head from 'next/head';
+import Skeleton from '@/components/shared/Skeleton';
 
 const contactListContainer = css({
   margin: `${theme.spacing.lg} 0`,
@@ -30,7 +30,7 @@ const searchBox = css(contactListContainer, {
   },
 });
 
-const mobileSearchBox = css({
+const desktopSearchBox = css({
   display: 'none',
 
   [theme.breakpoints.md]: {
@@ -48,6 +48,7 @@ const addLinkStyle = css({
   textDecoration: 'none',
   display: 'flex',
   fontSize: theme.text.xxl,
+  padding: `${theme.spacing.lg} 0 ${theme.spacing.lg} ${theme.spacing.lg}`,
 
   [theme.breakpoints.md]: {
     display: 'flex',
@@ -72,6 +73,15 @@ const addTextStyle = css({
   },
 });
 
+const addIconStyle = css({
+  color: theme.palette.primary.main,
+  fontSize: theme.text['2xl'],
+
+  [theme.breakpoints.md]: {
+    fontSize: theme.text.xl,
+  },
+});
+
 const headerRightSide = css({
   display: 'flex',
   gap: theme.spacing.md,
@@ -80,6 +90,12 @@ const headerRightSide = css({
 const notFoundText = css({
   fontSize: theme.text.md,
   textAlign: 'center',
+});
+
+const contactFoundText = css({
+  fontSize: theme.text.sm,
+  color: theme.palette.grey[400],
+  fontWeight: 400,
 });
 
 /**
@@ -162,14 +178,26 @@ const ContactPage = () => {
 
   return (
     <div>
+      <Head>
+        <title>kakaoico - Easily Manage Your Contact List</title>
+        <meta
+          name="description"
+          content="Browse and manage your contacts seamlessly. Access your full contact list, and easily identify your favorite contacts for quick communication."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/kakaoico.ico" />
+      </Head>
       <Header justify="space-between">
-        <h1>Phone Book</h1>
         <div css={headerRightSide}>
-          <div css={mobileSearchBox}>
+          <div css={desktopSearchBox}>
             <SearchContact onSearch={handleSearch} />
           </div>
-          <Link href="/add-contact" css={addLinkStyle}>
-            <span className="kao-person_add_alt"></span>
+          <Link
+            href="/add-contact"
+            css={addLinkStyle}
+            aria-label="Add a new contact"
+          >
+            <span css={addIconStyle} className="kao-person_add_alt"></span>
             <span css={addTextStyle}>Add contact</span>
           </Link>
         </div>
@@ -179,18 +207,33 @@ const ContactPage = () => {
           <SearchContact onSearch={handleSearch} />
         </div>
         {!onSearchMode && favoriteContacts.length > 0 && (
-          <ContactList contactListData={favoriteContacts} />
+          <ContactList title="Favorite" contactListData={favoriteContacts} />
         )}
-        {!onSearchMode && <ContactList contactListData={visibleContacts} />}
+        {!onSearchMode && (
+          <ContactList title="Contact List" contactListData={visibleContacts} />
+        )}
         {onSearchMode && searchResult.length <= 0 && (
           <div css={contactListContainer}>
             <p css={notFoundText}>Contact not found</p>
           </div>
         )}
         {onSearchMode && searchResult.length > 0 && (
-          <ContactList contactListData={searchResult} />
+          <ContactList
+            title={
+              <span>
+                Contact List{' '}
+                <span css={contactFoundText}>
+                  ({searchResult.length} found)
+                </span>
+              </span>
+            }
+            contactListData={searchResult}
+          />
         )}
-        {totalPage > 1 && !onSearchMode && (
+        {state.isLoadingContact && (
+          <Skeleton customClass={{ height: '30px', width: '100%' }}></Skeleton>
+        )}
+        {!state.isLoadingContact && totalPage > 1 && !onSearchMode && (
           <div
             css={
               visibleContacts.length + favoriteContacts.length < 10 &&

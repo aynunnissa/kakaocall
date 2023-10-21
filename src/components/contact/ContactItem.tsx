@@ -3,7 +3,8 @@ import { useContact } from '@/store/context/contact-context';
 import { IContact } from '@/store/types/contact';
 import { css } from '@emotion/react';
 import { theme } from '@theme';
-import ContactDropdown from './ContactDropdown';
+import ContactActions from './ContactActions';
+import Avatar from './Avatar';
 
 const flexContainer = css({
   display: 'flex',
@@ -30,20 +31,8 @@ const gridContainer = css({
 });
 
 const actionsColumnStyle = css(flexContainer, {
+  gap: '2px',
   justifySelf: 'end',
-});
-
-const avatarStyle = css({
-  objectFit: 'cover',
-  borderRadius: theme.shape.circle,
-  height: '4.5rem',
-  width: '4.5rem',
-  backgroundColor: 'pink',
-  flexShrink: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: theme.text.md,
 });
 
 const contactText = css({
@@ -83,6 +72,7 @@ const favoriteButtonStyle = css({
   border: 'none',
   backgroundColor: 'transparent',
   color: theme.palette.warning.main,
+  padding: theme.spacing.md,
 });
 
 const ContactItem = (props: IContact) => {
@@ -114,7 +104,7 @@ const ContactItem = (props: IContact) => {
   };
   return (
     <div css={gridContainer}>
-      <div css={avatarStyle}>{props.first_name.charAt(0)}</div>
+      <Avatar initial={props.first_name.charAt(0)} />
       <div>
         <p css={contactName}>
           {props.first_name} {props.last_name}
@@ -125,17 +115,15 @@ const ContactItem = (props: IContact) => {
         <p>{props.phones?.[0]?.number}</p>
       </div>
       <div css={actionsColumnStyle}>
-        {props.is_favorite && (
-          <button onClick={toggleFavorite} css={favoriteButtonStyle}>
-            <span className="kao-star-full"></span>
-          </button>
-        )}
-        {!props.is_favorite && (
-          <button onClick={toggleFavorite} css={favoriteButtonStyle}>
-            <span className="kao-star-empty"></span>
-          </button>
-        )}
-        <ContactDropdown onDelete={handleDelete} contactId={props.id} />
+        <button
+          onClick={toggleFavorite}
+          css={favoriteButtonStyle}
+          aria-label="Favorite Button"
+        >
+          {props.is_favorite && <span className="kao-star-full"></span>}
+          {!props.is_favorite && <span className="kao-star-empty"></span>}
+        </button>
+        <ContactActions onDelete={handleDelete} contactId={props.id} />
       </div>
     </div>
   );
