@@ -55,7 +55,11 @@ const ContactDropdown = ({ children, isMenuOpen, toggleMenu }: IProps) => {
 
   return (
     <div css={dropdown} ref={ref}>
-      <button css={iconButton} onClick={toggleMenu}>
+      <button
+        css={iconButton}
+        onClick={toggleMenu}
+        aria-label="Dropdown action"
+      >
         <span className="kao-dots-horizontal-triple"></span>
       </button>
       {isMenuOpen && (

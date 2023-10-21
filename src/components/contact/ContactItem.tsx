@@ -30,7 +30,7 @@ const gridContainer = css({
 });
 
 const actionsColumnStyle = css(flexContainer, {
-  gap: 0,
+  gap: '2px',
   justifySelf: 'end',
 });
 
@@ -127,16 +127,14 @@ const ContactItem = (props: IContact) => {
         <p>{props.phones?.[0]?.number}</p>
       </div>
       <div css={actionsColumnStyle}>
-        {props.is_favorite && (
-          <button onClick={toggleFavorite} css={favoriteButtonStyle}>
-            <span className="kao-star-full"></span>
-          </button>
-        )}
-        {!props.is_favorite && (
-          <button onClick={toggleFavorite} css={favoriteButtonStyle}>
-            <span className="kao-star-empty"></span>
-          </button>
-        )}
+        <button
+          onClick={toggleFavorite}
+          css={favoriteButtonStyle}
+          aria-label="Favorite Button"
+        >
+          {props.is_favorite && <span className="kao-star-full"></span>}
+          {!props.is_favorite && <span className="kao-star-empty"></span>}
+        </button>
         <ContactActions onDelete={handleDelete} contactId={props.id} />
       </div>
     </div>
