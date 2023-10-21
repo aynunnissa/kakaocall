@@ -179,13 +179,13 @@ const ContactPage = () => {
   return (
     <div>
       <Head>
-        <title>KakaoCall - Easily Manage Your Contact List</title>
+        <title>kakaoico - Easily Manage Your Contact List</title>
         <meta
           name="description"
           content="Browse and manage your contacts seamlessly. Access your full contact list, and easily identify your favorite contacts for quick communication."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/kakaoico.ico" />
       </Head>
       <Header justify="space-between">
         <div css={headerRightSide}>

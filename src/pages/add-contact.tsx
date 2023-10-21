@@ -189,7 +189,7 @@ const AddContact = () => {
           content="Create new contacts and effortlessly organize your connections. Stay connected with ease."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/kakaoico.ico" />
       </Head>
       <div>
         <Header />

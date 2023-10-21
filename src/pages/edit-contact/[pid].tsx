@@ -216,7 +216,7 @@ const EditContact = () => {
           content="Keep your contact list accurate and up-to-date with ease"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/kakaoico.ico" />
       </Head>
       <div>
         <Header />
