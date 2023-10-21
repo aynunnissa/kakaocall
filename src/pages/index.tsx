@@ -76,6 +76,10 @@ const addTextStyle = css({
 const addIconStyle = css({
   color: theme.palette.primary.main,
   fontSize: theme.text['2xl'],
+
+  [theme.breakpoints.md]: {
+    fontSize: theme.text.xl,
+  },
 });
 
 const headerRightSide = css({
