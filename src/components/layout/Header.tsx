@@ -59,7 +59,7 @@ const Header = ({ children, justify }: IProps) => {
     <div css={justify ? customJustify : headerStyle}>
       {/* Pages will have back button, except home page */}
       {!isHomepage && (
-        <Link href="/">
+        <Link href="/" aria-label="Back to home page">
           <span css={backIconStyle} className="kao-arrow-left"></span>
         </Link>
       )}

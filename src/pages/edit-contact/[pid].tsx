@@ -259,7 +259,11 @@ const EditContact = () => {
                 {formError && <p css={errorTextStyle}>{formError}</p>}
 
                 <div>
-                  <button css={submitButtonStyle} disabled={!enteredName}>
+                  <button
+                    css={submitButtonStyle}
+                    disabled={!enteredName}
+                    aria-label="Submit Update"
+                  >
                     Submit Update
                   </button>
                 </div>

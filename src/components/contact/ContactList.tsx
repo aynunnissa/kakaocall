@@ -75,7 +75,7 @@ const ContactList = ({ title, contactListData, isLoadingPage }: IProps) => {
       <div css={verticalStack}>
         {state.isLoadingContact || isLoadingPage ? (
           <div css={verticalStack}>
-            {[...Array(3)].map((num, ind) => (
+            {[...Array(4)].map((num, ind) => (
               <Skeleton
                 key={`skeleton-${ind}`}
                 customClass={{ height: '50px', width: '100%' }}

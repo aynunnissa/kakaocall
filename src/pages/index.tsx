@@ -12,6 +12,7 @@ import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import ContactList from '@/components/contact/ContactList';
 import Head from 'next/head';
+import Skeleton from '@/components/shared/Skeleton';
 
 const contactListContainer = css({
   margin: `${theme.spacing.lg} 0`,
@@ -187,7 +188,11 @@ const ContactPage = () => {
           <div css={desktopSearchBox}>
             <SearchContact onSearch={handleSearch} />
           </div>
-          <Link href="/add-contact" css={addLinkStyle}>
+          <Link
+            href="/add-contact"
+            css={addLinkStyle}
+            aria-label="Add a new contact"
+          >
             <span css={addIconStyle} className="kao-person_add_alt"></span>
             <span css={addTextStyle}>Add contact</span>
           </Link>
@@ -221,7 +226,10 @@ const ContactPage = () => {
             contactListData={searchResult}
           />
         )}
-        {totalPage > 1 && !onSearchMode && (
+        {state.isLoadingContact && (
+          <Skeleton customClass={{ height: '30px', width: '100%' }}></Skeleton>
+        )}
+        {!state.isLoadingContact && totalPage > 1 && !onSearchMode && (
           <div
             css={
               visibleContacts.length + favoriteContacts.length < 10 &&
