@@ -5,7 +5,7 @@ import { useLazyQuery } from '@apollo/client';
 import useInput from '@/hooks/use-input';
 import { useContact } from '@/store/context/contact-context';
 import { Types } from '@/store/action/action';
-import { useRouter as useNav } from 'next/navigation';
+import { useRouter as useNav } from 'next/router';
 import { useRouter } from 'next/router';
 import GET_CONTACT_LIST from '@/graphql/queries/GET_CONTACTS';
 import { theme } from '@theme';
