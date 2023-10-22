@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Types } from '@/store/action/action';
 import { useContact } from '@/store/context/contact-context';
 import { IContact } from '@/store/types/contact';
@@ -5,15 +6,12 @@ import { css } from '@emotion/react';
 import { theme } from '@theme';
 import ContactActions from './ContactActions';
 import Avatar from './Avatar';
+import Toast from '../shared/Toast';
 
 const flexContainer = css({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing.sm,
-});
-
-const contactContainer = css(flexContainer, {
-  justifyContent: 'space-between',
 });
 
 const gridContainer = css({
@@ -75,55 +73,45 @@ const favoriteButtonStyle = css({
   padding: theme.spacing.md,
 });
 
-const ContactItem = (props: IContact) => {
-  const { dispatch } = useContact();
+interface IProps {
+  contact: IContact;
+  onDelete: (id: number) => void;
+  toggleFavorite: (id: number, text: string) => void;
+}
 
-  /**
-   * This method used to handle add contact to/remove contact from the favorite list
-   */
-  const toggleFavorite = () => {
-    dispatch({
-      type: Types.toggle_Favorite,
-      payload: {
-        id: props.id,
-      },
-    });
-  };
-
-  /**
-   * Based on the requirements, the delete action do not use graphql
-   * Delete action will remove contact item from contactList (list of contact in local storage remain the same)
-   */
-  const handleDelete = () => {
-    dispatch({
-      type: Types.Delete,
-      payload: {
-        id: props.id,
-      },
-    });
-  };
+const ContactItem = ({ contact, onDelete, toggleFavorite }: IProps) => {
   return (
     <div css={gridContainer}>
-      <Avatar initial={props.first_name.charAt(0)} />
+      <Avatar initial={contact.first_name.charAt(0)} />
       <div>
         <p css={contactName}>
-          {props.first_name} {props.last_name}
+          {contact.first_name} {contact.last_name}
         </p>
-        <p css={contactNumber}>{props.phones?.[0]?.number}</p>
+        <p css={contactNumber}>{contact.phones?.[0]?.number}</p>
       </div>
       <div css={listContactNumber}>
-        <p>{props.phones?.[0]?.number}</p>
+        <p>{contact.phones?.[0]?.number}</p>
       </div>
       <div css={actionsColumnStyle}>
         <button
-          onClick={toggleFavorite}
+          onClick={() =>
+            toggleFavorite(
+              contact.id,
+              `Contact ${
+                contact.is_favorite ? 'removed from' : 'added to'
+              } favorite!`
+            )
+          }
           css={favoriteButtonStyle}
           aria-label="Favorite Button"
         >
-          {props.is_favorite && <span className="kao-star-full"></span>}
-          {!props.is_favorite && <span className="kao-star-empty"></span>}
+          {contact.is_favorite && <span className="kao-star-full"></span>}
+          {!contact.is_favorite && <span className="kao-star-empty"></span>}
         </button>
-        <ContactActions onDelete={handleDelete} contactId={props.id} />
+        <ContactActions
+          onDelete={() => onDelete(contact.id)}
+          contactId={contact.id}
+        />
       </div>
     </div>
   );

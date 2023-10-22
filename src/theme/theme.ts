@@ -18,6 +18,9 @@ const palette = {
     secondary: {
         main: '#D0BACE'
     },
+    success: {
+        main: '#2e7d32'
+    },
     error: {
         dark: '#C62828',
         main: '#D32F2F',

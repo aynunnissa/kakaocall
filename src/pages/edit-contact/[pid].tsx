@@ -7,85 +7,57 @@ import { useContact } from '@/store/context/contact-context';
 import { Types } from '@/store/action/action';
 import { useRouter as useNav } from 'next/navigation';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import GET_CONTACT_LIST from '@/graphql/queries/GET_CONTACTS';
 import { theme } from '@theme';
 import { IContact } from '@/store/types/contact';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import Head from 'next/head';
-
-const containerStyle = css({
-  minHeight: '100vh',
-  padding: theme.spacing.lg,
-});
-
-const headerStyle = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing.md,
-});
+import SubmitButton from '@/components/shared/form/SubmitButton';
+import Toast from '@/components/shared/Toast';
 
 const mainContainerStyle = css({
   display: 'flex',
   justifyContent: 'center',
-});
 
-const formContainerStyle = css({
-  width: '450px',
-  maxWidth: '100%',
-  marginTop: theme.spacing.lg,
-  padding: `${theme.spacing.md} ${theme.spacing.lg}`,
-  borderRadius: theme.shape.rounded.xl,
-  boxShadow: theme.shadow.normal,
+  '.contact-form': {
+    width: '450px',
+    maxWidth: '100%',
+    marginTop: theme.spacing.lg,
+    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+    borderRadius: theme.shape.rounded.xl,
+    boxShadow: theme.shadow.normal,
+  },
+
+  '.form-title': {
+    fontSize: theme.text.xl,
+    fontWeight: 500,
+    color: theme.palette.primary.main,
+    textAlign: 'center',
+  },
+
+  '.form-input': {
+    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+    outline: 'none',
+    border: 'none',
+    borderRadius: '8px',
+    backgroundColor: theme.palette.grey[100],
+    width: '100%',
+    margin: '5px 0px',
+    boxSizing: 'border-box',
+    fontSize: theme.text.md,
+  },
+
+  '.input-error': {
+    color: theme.palette.error.main,
+    marginTop: theme.spacing.xs,
+    fontSize: theme.text.sm,
+  },
 
   [theme.breakpoints.sm]: {
-    padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-  },
-});
-
-const formTitleStyle = css({
-  fontSize: theme.text.xl,
-  fontWeight: 500,
-  color: theme.palette.primary.main,
-  textAlign: 'center',
-});
-
-const inputField = css({
-  padding: `${theme.spacing.md} ${theme.spacing.lg}`,
-  outline: 'none',
-  border: 'none',
-  borderRadius: '8px',
-  backgroundColor: theme.palette.grey[100],
-  width: '100%',
-  margin: '5px 0px',
-  boxSizing: 'border-box',
-  fontSize: theme.text.md,
-});
-
-const errorTextStyle = css({
-  color: theme.palette.error.main,
-  marginTop: theme.spacing.xs,
-  fontSize: theme.text.sm,
-});
-
-const submitButtonStyle = css({
-  border: 'none',
-  width: '100%',
-  margin: `${theme.spacing.lg} 0`,
-  padding: `${theme.spacing.md}`,
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.common.white,
-  borderRadius: theme.shape.rounded.lg,
-  cursor: 'pointer',
-});
-
-const linkItem = css({
-  textDecoration: 'none',
-  color: theme.palette.common.black,
-
-  '> span': {
-    fontSize: theme.text.md,
+    '.contact-form': {
+      padding: `${theme.spacing.md} ${theme.spacing.xl}`,
+    },
   },
 });
 
@@ -112,6 +84,8 @@ const EditContact = () => {
   const [currentContact, setCurrentContact] = useState<IContact>();
   const [phoneFields, setPhoneFields] = useState([{ number: '' }]);
   const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [opentoast, setOpenToast] = useState(false);
 
   /**
    * This query used to check if contact with the same Name already exists
@@ -129,6 +103,8 @@ const EditContact = () => {
 
   const formSubmissionHandler = (event: React.FormEvent) => {
     event.preventDefault();
+    setFormError('');
+    setIsSubmitting(true);
 
     if (!enteredNameIsValid || !currentContact) {
       return;
@@ -155,12 +131,16 @@ const EditContact = () => {
       const name = `${contact.first_name} ${contact.last_name}`;
       const updatedName = `${firstName} ${lastName}`;
       if (name.toLowerCase().includes(updatedName.toLowerCase())) {
-        setFormError('Another contact with the same name already exists');
         return true;
       }
     });
 
-    if (existingContact) return;
+    if (existingContact) {
+      setFormError('Another contact with the same name already exists');
+      setIsSubmitting(false);
+      setOpenToast(true);
+      return;
+    }
 
     const getExistingContact = getContactList({
       variables: {
@@ -171,24 +151,29 @@ const EditContact = () => {
       },
     });
 
-    getExistingContact.then(result => {
-      if (result?.data?.contact?.length > 0) {
-        setFormError('Another contact with the same name already exists');
-      } else {
-        dispatch({
-          type: Types.Edit,
-          payload: {
-            contact: {
-              ...currentContact,
-              first_name: firstName,
-              last_name: lastName,
-              phones: phoneFields.filter(phone => phone.number),
+    getExistingContact
+      .then(result => {
+        if (result?.data?.contact?.length > 0) {
+          setFormError('Another contact with the same name already exists');
+        } else {
+          dispatch({
+            type: Types.Edit,
+            payload: {
+              contact: {
+                ...currentContact,
+                first_name: firstName.trim(),
+                last_name: lastName.trim(),
+                phones: phoneFields.filter(phone => phone.number),
+              },
             },
-          },
-        });
-        nav.push('/');
-      }
-    });
+          });
+          nav.push('/');
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+        setOpenToast(true);
+      });
   };
 
   useEffect(() => {
@@ -222,24 +207,24 @@ const EditContact = () => {
         <Header />
         <MainContainer>
           <div css={mainContainerStyle}>
-            <div css={formContainerStyle}>
-              <h2 css={formTitleStyle}>Edit Contact</h2>
+            <div className="contact-form">
+              <h2 className="form-title">Edit Contact</h2>
               <form onSubmit={formSubmissionHandler}>
                 <div>
                   <input
                     type="text"
                     id="firstName"
-                    css={inputField}
+                    className="form-input"
                     onChange={nameChangedHandler}
                     onBlur={nameBlurHandler}
                     value={enteredName}
                     placeholder="First name"
                   />
                   {nameInputHasError && !enteredName && (
-                    <p css={errorTextStyle}>Name must not be empty</p>
+                    <p className="input-error">Name must not be empty</p>
                   )}
                   {nameInputHasError && enteredName && (
-                    <p css={errorTextStyle}>
+                    <p className="input-error">
                       Name should not contain any special characters.
                     </p>
                   )}
@@ -248,7 +233,7 @@ const EditContact = () => {
                       <input
                         key={`phoneInput-${ind}`}
                         id={`phoneInput-${ind}`}
-                        css={inputField}
+                        className="form-input"
                         onChange={e => handlePhoneField(e, ind)}
                         placeholder={`Phone ${ind + 1}`}
                         value={field.number}
@@ -256,22 +241,32 @@ const EditContact = () => {
                     );
                   })}
                 </div>
-                {formError && <p css={errorTextStyle}>{formError}</p>}
+                {formError && <p className="input-error">{formError}</p>}
 
-                <div>
-                  <button
-                    css={submitButtonStyle}
-                    disabled={!enteredName}
-                    aria-label="Submit Update"
-                  >
-                    Submit Update
-                  </button>
-                </div>
+                <SubmitButton
+                  text="Submit Update"
+                  isDisabled={!enteredName}
+                  isSubmitting={isSubmitting}
+                />
               </form>
             </div>
           </div>
         </MainContainer>
       </div>
+      {opentoast && !formError && (
+        <Toast
+          text="Contact updated successfully!"
+          variant="success"
+          setOpenToast={setOpenToast}
+        />
+      )}
+      {opentoast && formError && (
+        <Toast
+          text="Failed to update contact"
+          variant="error"
+          setOpenToast={setOpenToast}
+        />
+      )}
     </>
   );
 };

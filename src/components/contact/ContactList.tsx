@@ -5,22 +5,31 @@ import { useContact } from '@/store/context/contact-context';
 import Skeleton from '../shared/Skeleton';
 import { IContact } from '@/store/types/contact';
 import { ReactNode } from 'react';
+import ContactHeaderDesktop from './ContactHeaderDesktop';
+import { Types } from '@/store/action/action';
 
 const contactListContainer = css({
   margin: `${theme.spacing.lg} 0`,
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
   borderRadius: theme.shape.rounded.xl,
   boxShadow: theme.shadow.normal,
-});
 
-const subTitleText = css({
-  color: theme.palette.primary.main,
-  fontWeight: 700,
-  fontSize: theme.text.md,
-  margin: `${theme.spacing.md} 0`,
+  '.contact-subtitle': {
+    color: theme.palette.primary.main,
+    fontWeight: 700,
+    fontSize: theme.text.md,
+    margin: `${theme.spacing.md} 0`,
+  },
+
+  '.not-found-text': {
+    fontSize: theme.text.md,
+    textAlign: 'center',
+  },
 
   [theme.breakpoints.md]: {
-    fontSize: theme.text.xl,
+    '.contact-subtitle': {
+      fontSize: theme.text.xl,
+    },
   },
 });
 
@@ -34,44 +43,56 @@ const verticalStack = css({
   },
 });
 
-/**
- * Style to handle header row on medium screen size
- */
-const gridContainer = css({
-  display: 'none',
-
-  [theme.breakpoints.sm]: {
-    display: 'grid',
-    columnGap: theme.spacing.md,
-    gridTemplateColumns:
-      '[avatar] 4.5rem [contact] 3fr [phone] 2fr [actions] 3fr',
-    alignItems: 'center',
-    textAlign: 'left',
-    fontSize: theme.text.md,
-    color: theme.palette.grey[400],
-    fontWeight: 500,
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
-    marginBottom: theme.spacing.lg,
-  },
-});
-
 interface IProps {
   title: ReactNode;
   contactListData: IContact[];
   isLoadingPage?: boolean;
+  noDataText?: string;
+  onOpenToast: (text: string) => void;
 }
 
-const ContactList = ({ title, contactListData, isLoadingPage }: IProps) => {
+const ContactList = ({
+  title,
+  contactListData,
+  isLoadingPage,
+  noDataText,
+  onOpenToast,
+}: IProps) => {
   const { state } = useContact();
+
+  const { dispatch } = useContact();
+
+  /**
+   * This method used to handle add contact to/remove contact from the favorite list
+   */
+  const toggleFavorite = (id: number, text: string) => {
+    onOpenToast(text);
+    dispatch({
+      type: Types.toggle_Favorite,
+      payload: {
+        id: id,
+      },
+    });
+  };
+
+  /**
+   * Based on the requirements, the delete action do not use graphql
+   * Delete action will remove contact item from contactList (list of contact in local storage remain the same)
+   */
+  const handleDelete = (id: number) => {
+    onOpenToast('Contact deleted successfully!');
+    dispatch({
+      type: Types.Delete,
+      payload: {
+        id: id,
+      },
+    });
+  };
+
   return (
     <div css={contactListContainer}>
-      <h2 css={subTitleText}>{title}</h2>
-      <div css={gridContainer}>
-        <div></div>
-        <p>Name</p>
-        <p>Phone Number</p>
-        <div></div>
-      </div>
+      <h2 className="contact-subtitle">{title}</h2>
+      <ContactHeaderDesktop />
       <div css={verticalStack}>
         {state.isLoadingContact || isLoadingPage ? (
           <div css={verticalStack}>
@@ -82,17 +103,17 @@ const ContactList = ({ title, contactListData, isLoadingPage }: IProps) => {
               />
             ))}
           </div>
-        ) : (
+        ) : contactListData.length > 0 ? (
           contactListData.map((item, ind: number) => (
             <ContactItem
               key={`contact-${ind}`}
-              id={item.id}
-              first_name={item.first_name}
-              last_name={item.last_name}
-              phones={item.phones}
-              is_favorite={item.is_favorite}
+              contact={item}
+              onDelete={handleDelete}
+              toggleFavorite={toggleFavorite}
             />
           ))
+        ) : (
+          <p className="not-found-text">{noDataText}</p>
         )}
       </div>
     </div>
