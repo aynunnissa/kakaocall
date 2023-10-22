@@ -99,6 +99,7 @@ const ContactActions = ({ onDelete, contactId }: IProps) => {
         href={`/edit-contact/${contactId}`}
         css={editIconButton}
         onClick={toggleMenu}
+        aria-label="Edit contact"
       >
         <span className="kao-pencil-square-o"></span> Edit
       </Link>

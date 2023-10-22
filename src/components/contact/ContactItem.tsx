@@ -1,12 +1,8 @@
-import { useState } from 'react';
-import { Types } from '@/store/action/action';
-import { useContact } from '@/store/context/contact-context';
 import { IContact } from '@/store/types/contact';
 import { css } from '@emotion/react';
 import { theme } from '@theme';
 import ContactActions from './ContactActions';
 import Avatar from './Avatar';
-import Toast from '../shared/Toast';
 
 const flexContainer = css({
   display: 'flex',
@@ -40,6 +36,7 @@ const contactText = css({
 const contactName = css(contactText, {
   fontSize: theme.text.md,
   fontWeight: 500,
+  wordBreak: 'break-all',
 
   [theme.breakpoints.md]: {
     fontSize: theme.text.lg,
