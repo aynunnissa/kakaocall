@@ -6,90 +6,77 @@ import { useContact } from '@/store/context/contact-context';
 
 import { IContact } from '@/store/types/contact';
 import Link from 'next/link';
-import SearchContact from '@/components/contact/SearchContact';
 import Pagination from '@/components/shared/Pagination';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import ContactList from '@/components/contact/ContactList';
 import Head from 'next/head';
 import Skeleton from '@/components/shared/Skeleton';
+import dynamic from 'next/dynamic';
 
-const contactListContainer = css({
-  margin: `${theme.spacing.lg} 0`,
-  padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+const searchBox = css({
+  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
   borderRadius: theme.shape.rounded.xl,
   boxShadow: theme.shadow.normal,
-});
-
-const searchBox = css(contactListContainer, {
-  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
-  marginTop: 0,
 
   [theme.breakpoints.md]: {
     display: 'none',
   },
 });
 
-const desktopSearchBox = css({
-  display: 'none',
+const headerRightSide = css({
+  display: 'flex',
+  gap: theme.spacing.md,
 
-  [theme.breakpoints.md]: {
-    display: 'block',
-    width: '300px',
-  },
+  '.desktop-search': {
+    display: 'none',
 
-  [theme.breakpoints.lg]: {
-    display: 'block',
-    width: '450px',
+    [theme.breakpoints.md]: {
+      display: 'block',
+      width: '300px',
+    },
+
+    [theme.breakpoints.lg]: {
+      display: 'block',
+      width: '450px',
+    },
   },
 });
 
-const addLinkStyle = css({
+const headerRightContent = css({
   textDecoration: 'none',
   display: 'flex',
   fontSize: theme.text.xxl,
   padding: `${theme.spacing.lg} 0 ${theme.spacing.lg} ${theme.spacing.lg}`,
+  color: theme.palette.primary.main,
+
+  '.content-text': {
+    display: 'none',
+    fontSize: theme.text.md,
+    fontWeight: 600,
+  },
+
+  '.content-icon': {
+    color: theme.palette.primary.main,
+    fontSize: theme.text['2xl'],
+  },
 
   [theme.breakpoints.md]: {
-    display: 'flex',
     alignItems: 'center',
     gap: theme.spacing.sm,
     fontSize: theme.text.xl,
-    color: theme.palette.primary.main,
     padding: theme.spacing.sm,
-    textDecoration: 'none',
     backgroundColor: theme.palette.primary.light,
     borderRadius: theme.shape.rounded.lg,
+
+    '.content-text': {
+      display: 'inline',
+    },
+
+    '.content-icon': {
+      fontSize: theme.text.xl,
+    },
   },
-});
-
-const addTextStyle = css({
-  display: 'none',
-  fontSize: theme.text.md,
-  fontWeight: 600,
-
-  [theme.breakpoints.md]: {
-    display: 'inline',
-  },
-});
-
-const addIconStyle = css({
-  color: theme.palette.primary.main,
-  fontSize: theme.text['2xl'],
-
-  [theme.breakpoints.md]: {
-    fontSize: theme.text.xl,
-  },
-});
-
-const headerRightSide = css({
-  display: 'flex',
-  gap: theme.spacing.md,
-});
-
-const notFoundText = css({
-  fontSize: theme.text.md,
-  textAlign: 'center',
 });
 
 const contactFoundText = css({
@@ -106,6 +93,16 @@ const absolutePagination = css({
   bottom: 0,
   right: theme.spacing.xl,
 });
+
+const SearchComponent = dynamic(
+  () => import('@/components/contact/SearchContact'),
+  {
+    loading: () => (
+      <Skeleton customClass={{ height: '40px', width: '100%' }}></Skeleton>
+    ),
+    ssr: false,
+  }
+);
 
 const ContactPage = () => {
   const { state } = useContact();
@@ -189,35 +186,34 @@ const ContactPage = () => {
       </Head>
       <Header justify="space-between">
         <div css={headerRightSide}>
-          <div css={desktopSearchBox}>
-            <SearchContact onSearch={handleSearch} />
+          <div className="desktop-search">
+            <SearchComponent onSearch={handleSearch} />
           </div>
           <Link
             href="/add-contact"
-            css={addLinkStyle}
+            css={headerRightContent}
             aria-label="Add a new contact"
           >
-            <span css={addIconStyle} className="kao-person_add_alt"></span>
-            <span css={addTextStyle}>Add contact</span>
+            <span className="kao-person_add_alt content-icon"></span>
+            <span className="content-text">Add contact</span>
           </Link>
         </div>
       </Header>
       <MainContainer>
         <div css={searchBox}>
-          <SearchContact onSearch={handleSearch} />
+          <SearchComponent onSearch={handleSearch} />
         </div>
         {!onSearchMode && favoriteContacts.length > 0 && (
           <ContactList title="Favorite" contactListData={favoriteContacts} />
         )}
         {!onSearchMode && (
-          <ContactList title="Contact List" contactListData={visibleContacts} />
+          <ContactList
+            title="Contact List"
+            contactListData={visibleContacts}
+            noDataText="You haven't added any contacts yet"
+          />
         )}
-        {onSearchMode && searchResult.length <= 0 && (
-          <div css={contactListContainer}>
-            <p css={notFoundText}>Contact not found</p>
-          </div>
-        )}
-        {onSearchMode && searchResult.length > 0 && (
+        {onSearchMode && (
           <ContactList
             title={
               <span>
@@ -228,10 +224,12 @@ const ContactPage = () => {
               </span>
             }
             contactListData={searchResult}
+            isLoadingPage={isLoadingPage}
+            noDataText="Contact not found"
           />
         )}
         {state.isLoadingContact && (
-          <Skeleton customClass={{ height: '30px', width: '100%' }}></Skeleton>
+          <Skeleton customClass={{ height: '20px', width: '100%' }}></Skeleton>
         )}
         {!state.isLoadingContact && totalPage > 1 && !onSearchMode && (
           <div

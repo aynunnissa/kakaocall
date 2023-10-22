@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
 
 import { css } from '@emotion/react';
 import { theme } from '@theme';
@@ -29,7 +28,9 @@ interface IProps {
 }
 
 const DropdownModal = dynamic(() => import('./DropdownModal'), {
-  suspense: true,
+  loading: () => (
+    <Skeleton customClass={{ height: '100px', width: '100px' }}></Skeleton>
+  ),
 });
 
 const ContactDropdown = ({ children, isMenuOpen, toggleMenu }: IProps) => {
@@ -62,17 +63,7 @@ const ContactDropdown = ({ children, isMenuOpen, toggleMenu }: IProps) => {
       >
         <span className="kao-dots-horizontal-triple"></span>
       </button>
-      {isMenuOpen && (
-        <Suspense
-          fallback={
-            <Skeleton
-              customClass={{ height: '100px', width: '100px' }}
-            ></Skeleton>
-          }
-        >
-          <DropdownModal>{children}</DropdownModal>
-        </Suspense>
-      )}
+      {isMenuOpen && <DropdownModal>{children}</DropdownModal>}
     </div>
   );
 };

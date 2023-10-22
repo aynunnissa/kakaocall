@@ -6,26 +6,26 @@ const inputContainer = css({
   position: 'relative',
   border: 'none',
   flexGrow: 1,
-});
 
-const inputIcon = css({
-  position: 'absolute',
-  top: '50%',
-  transform: 'translateY(-50%)',
-  left: theme.spacing.sm,
-  fontWeight: 600,
-  fontSize: theme.text.lg,
-  color: theme.palette.grey[400],
-});
+  '.input-icon': {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    left: theme.spacing.sm,
+    fontWeight: 600,
+    fontSize: theme.text.lg,
+    color: theme.palette.grey[400],
+  },
 
-const inputField = css({
-  padding: `${theme.spacing.md} ${theme.spacing.sm} ${theme.spacing.md} ${theme.spacing['2xl']}`,
-  outline: 'none',
-  border: 'none',
-  borderRadius: theme.shape.rounded.xl,
-  backgroundColor: theme.palette.grey[100],
-  width: '100%',
-  boxSizing: 'border-box',
+  '.input-field': {
+    padding: `${theme.spacing.md} ${theme.spacing.sm} ${theme.spacing.md} ${theme.spacing['2xl']}`,
+    outline: 'none',
+    border: 'none',
+    borderRadius: theme.shape.rounded.xl,
+    backgroundColor: theme.palette.grey[100],
+    width: '100%',
+    boxSizing: 'border-box',
+  },
 });
 
 interface IProps {
@@ -39,11 +39,11 @@ const SearchContact = ({ onSearch }: IProps) => {
 
   return (
     <div css={inputContainer}>
-      <span css={inputIcon} className="kao-search"></span>
+      <span className="kao-search input-icon"></span>
       <input
         type="text"
         name="searchContact"
-        css={inputField}
+        className="input-field"
         placeholder="Search contact name..."
         onChange={handleInputChange}
       />

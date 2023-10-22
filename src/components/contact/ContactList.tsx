@@ -5,22 +5,30 @@ import { useContact } from '@/store/context/contact-context';
 import Skeleton from '../shared/Skeleton';
 import { IContact } from '@/store/types/contact';
 import { ReactNode } from 'react';
+import ContactHeaderDesktop from './ContactHeaderDesktop';
 
 const contactListContainer = css({
   margin: `${theme.spacing.lg} 0`,
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
   borderRadius: theme.shape.rounded.xl,
   boxShadow: theme.shadow.normal,
-});
 
-const subTitleText = css({
-  color: theme.palette.primary.main,
-  fontWeight: 700,
-  fontSize: theme.text.md,
-  margin: `${theme.spacing.md} 0`,
+  '.contact-subtitle': {
+    color: theme.palette.primary.main,
+    fontWeight: 700,
+    fontSize: theme.text.md,
+    margin: `${theme.spacing.md} 0`,
+  },
+
+  '.not-found-text': {
+    fontSize: theme.text.md,
+    textAlign: 'center',
+  },
 
   [theme.breakpoints.md]: {
-    fontSize: theme.text.xl,
+    '.contact-subtitle': {
+      fontSize: theme.text.xl,
+    },
   },
 });
 
@@ -34,44 +42,25 @@ const verticalStack = css({
   },
 });
 
-/**
- * Style to handle header row on medium screen size
- */
-const gridContainer = css({
-  display: 'none',
-
-  [theme.breakpoints.sm]: {
-    display: 'grid',
-    columnGap: theme.spacing.md,
-    gridTemplateColumns:
-      '[avatar] 4.5rem [contact] 3fr [phone] 2fr [actions] 3fr',
-    alignItems: 'center',
-    textAlign: 'left',
-    fontSize: theme.text.md,
-    color: theme.palette.grey[400],
-    fontWeight: 500,
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
-    marginBottom: theme.spacing.lg,
-  },
-});
-
 interface IProps {
   title: ReactNode;
   contactListData: IContact[];
   isLoadingPage?: boolean;
+  noDataText?: string;
 }
 
-const ContactList = ({ title, contactListData, isLoadingPage }: IProps) => {
+const ContactList = ({
+  title,
+  contactListData,
+  isLoadingPage,
+  noDataText,
+}: IProps) => {
   const { state } = useContact();
+
   return (
     <div css={contactListContainer}>
-      <h2 css={subTitleText}>{title}</h2>
-      <div css={gridContainer}>
-        <div></div>
-        <p>Name</p>
-        <p>Phone Number</p>
-        <div></div>
-      </div>
+      <h2 className="contact-subtitle">{title}</h2>
+      <ContactHeaderDesktop />
       <div css={verticalStack}>
         {state.isLoadingContact || isLoadingPage ? (
           <div css={verticalStack}>
@@ -82,7 +71,7 @@ const ContactList = ({ title, contactListData, isLoadingPage }: IProps) => {
               />
             ))}
           </div>
-        ) : (
+        ) : contactListData.length > 0 ? (
           contactListData.map((item, ind: number) => (
             <ContactItem
               key={`contact-${ind}`}
@@ -93,6 +82,8 @@ const ContactList = ({ title, contactListData, isLoadingPage }: IProps) => {
               is_favorite={item.is_favorite}
             />
           ))
+        ) : (
+          <p className="not-found-text">{noDataText}</p>
         )}
       </div>
     </div>

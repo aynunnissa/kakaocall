@@ -14,10 +14,21 @@ const headerStyle = css({
   alignItems: 'center',
   gap: theme.spacing.sm,
   padding: `${theme.spacing.lg} ${theme.spacing.xl} 0 ${theme.spacing.xl}`,
+  color: theme.palette.primary.main,
 
-  '> a': {
+  '.header-link': {
     textDecoration: 'none',
     display: 'flex',
+    color: 'inherit',
+  },
+
+  '.header-title': {
+    fontSize: theme.text.xxl,
+    margin: 0,
+  },
+
+  '.header-icon': {
+    padding: `${theme.spacing.lg} ${theme.spacing.lg} ${theme.spacing.lg} 0`,
   },
 
   [theme.breakpoints.md]: {
@@ -25,45 +36,26 @@ const headerStyle = css({
     backgroundColor: theme.palette.primary.main,
     padding: `${theme.spacing.lg} ${theme.spacing.xl}`,
 
-    '> a': {
-      color: 'inherit',
+    '.header-title': {
+      fontSize: theme.text['2xl'],
     },
   },
 });
 
-const titleTextStyle = css({
-  color: theme.palette.primary.main,
-  fontSize: theme.text.xxl,
-  margin: 0,
-
-  [theme.breakpoints.md]: {
-    fontSize: theme.text['2xl'],
-    color: theme.palette.common.white,
-  },
-});
-
-const backIconStyle = css({
-  color: theme.palette.primary.main,
-  padding: `${theme.spacing.lg} ${theme.spacing.lg} ${theme.spacing.lg} 0`,
-});
 const Header = ({ children, justify }: IProps) => {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
   const isHomepage = path === '';
 
-  const customJustify = css(headerStyle, {
-    justifyContent: justify ? justify : 'normal',
-  });
-
   return (
-    <div css={justify ? customJustify : headerStyle}>
+    <div css={headerStyle} style={{ justifyContent: justify }}>
       {/* Pages will have back button, except home page */}
       {!isHomepage && (
-        <Link href="/" aria-label="Back to home page">
-          <span css={backIconStyle} className="kao-arrow-left"></span>
+        <Link href="/" className="header-link" aria-label="Back to home page">
+          <span className="kao-arrow-left header-icon"></span>
         </Link>
       )}
-      <h1 css={titleTextStyle}>Phone Book</h1>
+      <h1 className="header-title">Phone Book</h1>
       {isHomepage && children}
     </div>
   );
