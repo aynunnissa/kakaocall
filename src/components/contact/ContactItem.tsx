@@ -4,12 +4,6 @@ import { theme } from '@theme';
 import ContactActions from './ContactActions';
 import Avatar from './Avatar';
 
-const flexContainer = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing.sm,
-});
-
 const gridContainer = css({
   display: 'grid',
   gridTemplateColumns: '[avatar] 4.5rem [contact] 3fr [actions] 1fr',
@@ -24,31 +18,39 @@ const gridContainer = css({
   },
 });
 
-const actionsColumnStyle = css(flexContainer, {
+const actionsColumnStyle = css({
+  display: 'flex',
+  alignItems: 'center',
   gap: '2px',
   justifySelf: 'end',
 });
 
-const contactText = css({
-  margin: 0,
-});
-
-const contactName = css(contactText, {
-  fontSize: theme.text.md,
-  fontWeight: 500,
-  wordBreak: 'break-all',
-
-  [theme.breakpoints.md]: {
-    fontSize: theme.text.lg,
+const contactInfo = css({
+  '.contact-name, .contact-number': {
+    margin: 0,
   },
-});
 
-const contactNumber = css(contactText, {
-  fontSize: theme.text.xs,
-  color: theme.palette.grey[400],
+  '.contact-name': {
+    fontSize: theme.text.md,
+    fontWeight: 500,
+    wordBreak: 'break-all',
+  },
+
+  '.contact-number': {
+    fontSize: theme.text.xs,
+    color: theme.palette.grey[400],
+  },
 
   [theme.breakpoints.sm]: {
-    display: 'none',
+    '.contact-number': {
+      display: 'none',
+    },
+  },
+
+  [theme.breakpoints.md]: {
+    '.contact-name': {
+      fontSize: theme.text.lg,
+    },
   },
 });
 
@@ -80,11 +82,11 @@ const ContactItem = ({ contact, onDelete, toggleFavorite }: IProps) => {
   return (
     <div css={gridContainer} data-testid="contact-item">
       <Avatar initial={contact.first_name.charAt(0)} />
-      <div>
-        <p css={contactName}>
+      <div css={contactInfo}>
+        <p className="contact-name">
           {contact.first_name} {contact.last_name}
         </p>
-        <p css={contactNumber}>{contact.phones?.[0]?.number}</p>
+        <p className="contact-number">{contact.phones?.[0]?.number}</p>
       </div>
       <div css={listContactNumber}>
         <p>{contact.phones?.[0]?.number}</p>

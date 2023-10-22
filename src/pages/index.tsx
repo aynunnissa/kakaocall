@@ -13,7 +13,6 @@ import ContactList from '@/components/contact/ContactList';
 import Head from 'next/head';
 import Skeleton from '@/components/shared/Skeleton';
 import dynamic from 'next/dynamic';
-import Toast from '@/components/shared/Toast';
 
 const searchBox = css({
   padding: `${theme.spacing.sm} ${theme.spacing.md}`,
@@ -104,6 +103,13 @@ const SearchComponent = dynamic(
     ssr: false,
   }
 );
+
+// Lazy load toast component
+const ToastComponent = dynamic(() => import('@/components/shared/Toast'), {
+  loading: () => (
+    <Skeleton customClass={{ height: '40px', width: '100px' }}></Skeleton>
+  ),
+});
 
 const ContactPage = () => {
   const { state } = useContact();
@@ -252,7 +258,7 @@ const ContactPage = () => {
         {!state.isLoadingContact && totalPage > 1 && !onSearchMode && (
           <div
             css={
-              visibleContacts.length + favoriteContacts.length < 10 &&
+              visibleContacts.length + favoriteContacts.length < 4 &&
               absolutePagination
             }
           >
@@ -265,7 +271,11 @@ const ContactPage = () => {
         )}
       </MainContainer>
       {opentoast && (
-        <Toast text={toastText} variant="success" setOpenToast={setOpenToast} />
+        <ToastComponent
+          text={toastText}
+          variant="success"
+          setOpenToast={setOpenToast}
+        />
       )}
     </div>
   );

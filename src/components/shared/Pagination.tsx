@@ -2,6 +2,39 @@ import { css } from '@emotion/react';
 import { theme } from '@theme';
 import { useEffect, useState } from 'react';
 
+const paginationList = css({
+  listStyle: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'end',
+  padding: 0,
+  margin: `${theme.spacing.lg} 0`,
+
+  '.pagination-btn, .pagination-last-arrow, .active-page': {
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: theme.palette.grey[400],
+    fontSize: theme.text.md,
+    padding: `${theme.spacing.sm} ${theme.spacing.md}`,
+    cursor: 'pointer',
+  },
+
+  '.pagination-last-arrow': {
+    padding: `${theme.spacing.sm} 0 ${theme.spacing.sm} ${theme.spacing.md}`,
+  },
+
+  '.active-page': {
+    color: theme.palette.primary.main,
+    borderBottom: `2px solid ${theme.palette.primary.main}`,
+  },
+
+  [theme.breakpoints.md]: {
+    '.pagination-btn, .pagination-last-arrow, .active-page': {
+      fontSize: theme.text.lg,
+    },
+  },
+});
+
 interface IProps {
   totalPages: number;
   currentPage: number;
@@ -12,38 +45,6 @@ interface IPage {
   name: number;
   isDisabled: boolean;
 }
-
-const paginationList = css({
-  listStyle: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'end',
-  // gap: theme.spacing.lg,
-  padding: 0,
-  margin: `${theme.spacing.lg} 0`,
-});
-
-const paginationButton = css({
-  backgroundColor: 'transparent',
-  border: 'none',
-  color: theme.palette.grey[400],
-  fontSize: theme.text.md,
-  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
-  cursor: 'pointer',
-
-  [theme.breakpoints.md]: {
-    fontSize: theme.text.lg,
-  },
-});
-
-const paginationLastArrow = css(paginationButton, {
-  padding: `${theme.spacing.sm} 0 ${theme.spacing.sm} ${theme.spacing.md}`,
-});
-
-const activePaginationButton = css(paginationButton, {
-  color: theme.palette.primary.main,
-  borderBottom: `2px solid ${theme.palette.primary.main}`,
-});
 
 const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
   const maxVisibleButtons = 3;
@@ -134,7 +135,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
         <li className="pagination-item">
           <button
             type="button"
-            css={paginationButton}
+            className="pagination-btn"
             disabled={isInFirstPage}
             aria-label="Go to previous page"
             onClick={onClickPreviousPage}
@@ -147,9 +148,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
         <li className="pagination-item">
           <button
             type="button"
-            css={css`
-              ${currentPage === 1 ? activePaginationButton : paginationButton}
-            `}
+            className={currentPage === 1 ? 'active-page' : 'pagination-btn'}
             disabled={isInFirstPage}
             aria-label="Go to page number 1"
             onClick={onClickFirstPage}
@@ -163,7 +162,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
           <li className="pagination-item">
             <button
               type="button"
-              css={paginationButton}
+              className="pagination-button"
               aria-label="Go to previous page"
               onClick={onClickRangePreviousPage}
             >
@@ -179,11 +178,9 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
               <button
                 type="button"
                 disabled={page.isDisabled}
-                css={css`
-                  ${currentPage === page.name
-                    ? activePaginationButton
-                    : paginationButton}
-                `}
+                className={
+                  currentPage === page.name ? 'active-page' : 'pagination-btn'
+                }
                 aria-label={`Go to page number ${page.name}`}
                 onClick={() => onClickPage(page.name)}
               >
@@ -198,7 +195,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
           <li className="pagination-item">
             <button
               type="button"
-              css={paginationButton}
+              className="pagination-button"
               aria-label="Go to next page"
               onClick={onClickRangeNextPage}
             >
@@ -212,11 +209,9 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
           <li className="pagination-item">
             <button
               type="button"
-              css={css`
-                ${currentPage === totalPages
-                  ? activePaginationButton
-                  : paginationButton}
-              `}
+              className={
+                currentPage === totalPages ? 'active-page' : 'pagination-btn'
+              }
               disabled={isInLastPage}
               aria-label={`Go to page number ${totalPages}`}
               onClick={onClickLastPage}
@@ -230,7 +225,7 @@ const Pagination = ({ totalPages, currentPage, pageChanged }: IProps) => {
         <li className="pagination-item">
           <button
             type="button"
-            css={paginationLastArrow}
+            className="pagination-last-arrow"
             disabled={isInLastPage}
             aria-label="Go to next page"
             onClick={onClickNextPage}
