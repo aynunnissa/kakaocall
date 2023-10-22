@@ -7,7 +7,6 @@ import { useContact } from '@/store/context/contact-context';
 import { Types } from '@/store/action/action';
 import { useRouter as useNav } from 'next/navigation';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import GET_CONTACT_LIST from '@/graphql/queries/GET_CONTACTS';
 import { theme } from '@theme';
 import { IContact } from '@/store/types/contact';
@@ -15,6 +14,7 @@ import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import Head from 'next/head';
 import SubmitButton from '@/components/shared/form/SubmitButton';
+import Toast from '@/components/shared/Toast';
 
 const mainContainerStyle = css({
   display: 'flex',
@@ -85,6 +85,7 @@ const EditContact = () => {
   const [phoneFields, setPhoneFields] = useState([{ number: '' }]);
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [opentoast, setOpenToast] = useState(false);
 
   /**
    * This query used to check if contact with the same Name already exists
@@ -102,6 +103,8 @@ const EditContact = () => {
 
   const formSubmissionHandler = (event: React.FormEvent) => {
     event.preventDefault();
+    setFormError('');
+    setIsSubmitting(true);
 
     if (!enteredNameIsValid || !currentContact) {
       return;
@@ -135,6 +138,7 @@ const EditContact = () => {
     if (existingContact) {
       setFormError('Another contact with the same name already exists');
       setIsSubmitting(false);
+      setOpenToast(true);
       return;
     }
 
@@ -168,6 +172,7 @@ const EditContact = () => {
       })
       .finally(() => {
         setIsSubmitting(false);
+        setOpenToast(true);
       });
   };
 
@@ -248,6 +253,20 @@ const EditContact = () => {
           </div>
         </MainContainer>
       </div>
+      {opentoast && !formError && (
+        <Toast
+          text="Contact updated successfully!"
+          variant="success"
+          setOpenToast={setOpenToast}
+        />
+      )}
+      {opentoast && formError && (
+        <Toast
+          text="Failed to update contact"
+          variant="error"
+          setOpenToast={setOpenToast}
+        />
+      )}
     </>
   );
 };

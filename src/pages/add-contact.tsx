@@ -158,6 +158,7 @@ const AddContact = () => {
     });
 
     if (existingContact) {
+      setOpenToast(true);
       setIsSubmitting(false);
       return;
     }

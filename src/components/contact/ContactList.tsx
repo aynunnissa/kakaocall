@@ -6,6 +6,7 @@ import Skeleton from '../shared/Skeleton';
 import { IContact } from '@/store/types/contact';
 import { ReactNode } from 'react';
 import ContactHeaderDesktop from './ContactHeaderDesktop';
+import { Types } from '@/store/action/action';
 
 const contactListContainer = css({
   margin: `${theme.spacing.lg} 0`,
@@ -47,6 +48,7 @@ interface IProps {
   contactListData: IContact[];
   isLoadingPage?: boolean;
   noDataText?: string;
+  onOpenToast: (text: string) => void;
 }
 
 const ContactList = ({
@@ -54,8 +56,38 @@ const ContactList = ({
   contactListData,
   isLoadingPage,
   noDataText,
+  onOpenToast,
 }: IProps) => {
   const { state } = useContact();
+
+  const { dispatch } = useContact();
+
+  /**
+   * This method used to handle add contact to/remove contact from the favorite list
+   */
+  const toggleFavorite = (id: number, text: string) => {
+    onOpenToast(text);
+    dispatch({
+      type: Types.toggle_Favorite,
+      payload: {
+        id: id,
+      },
+    });
+  };
+
+  /**
+   * Based on the requirements, the delete action do not use graphql
+   * Delete action will remove contact item from contactList (list of contact in local storage remain the same)
+   */
+  const handleDelete = (id: number) => {
+    onOpenToast('Contact deleted successfully!');
+    dispatch({
+      type: Types.Delete,
+      payload: {
+        id: id,
+      },
+    });
+  };
 
   return (
     <div css={contactListContainer}>
@@ -75,11 +107,9 @@ const ContactList = ({
           contactListData.map((item, ind: number) => (
             <ContactItem
               key={`contact-${ind}`}
-              id={item.id}
-              first_name={item.first_name}
-              last_name={item.last_name}
-              phones={item.phones}
-              is_favorite={item.is_favorite}
+              contact={item}
+              onDelete={handleDelete}
+              toggleFavorite={toggleFavorite}
             />
           ))
         ) : (

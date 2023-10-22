@@ -13,6 +13,7 @@ import ContactList from '@/components/contact/ContactList';
 import Head from 'next/head';
 import Skeleton from '@/components/shared/Skeleton';
 import dynamic from 'next/dynamic';
+import Toast from '@/components/shared/Toast';
 
 const searchBox = css({
   padding: `${theme.spacing.sm} ${theme.spacing.md}`,
@@ -115,6 +116,17 @@ const ContactPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
+  /**
+   * Toast for favorite and delete actions
+   */
+  const [opentoast, setOpenToast] = useState(false);
+  const [toastText, setToastText] = useState('');
+
+  const handleOpenToast = (text: string) => {
+    setOpenToast(true);
+    setToastText(text);
+  };
+
   const handlePageChanged = (value: number) => {
     setCurrentPage(value);
   };
@@ -204,10 +216,15 @@ const ContactPage = () => {
           <SearchComponent onSearch={handleSearch} />
         </div>
         {!onSearchMode && favoriteContacts.length > 0 && (
-          <ContactList title="Favorite" contactListData={favoriteContacts} />
+          <ContactList
+            onOpenToast={handleOpenToast}
+            title="Favorite"
+            contactListData={favoriteContacts}
+          />
         )}
         {!onSearchMode && (
           <ContactList
+            onOpenToast={handleOpenToast}
             title="Contact List"
             contactListData={visibleContacts}
             noDataText="You haven't added any contacts yet"
@@ -215,6 +232,7 @@ const ContactPage = () => {
         )}
         {onSearchMode && (
           <ContactList
+            onOpenToast={handleOpenToast}
             title={
               <span>
                 Contact List{' '}
@@ -246,6 +264,9 @@ const ContactPage = () => {
           </div>
         )}
       </MainContainer>
+      {opentoast && (
+        <Toast text={toastText} variant="success" setOpenToast={setOpenToast} />
+      )}
     </div>
   );
 };

@@ -55,7 +55,6 @@ function contactReducer(state: State, action: ContactActions) {
         return contact;
       });
 
-      console.log(newContactList);
       return {
         ...state,
         contactList: newContactList,
