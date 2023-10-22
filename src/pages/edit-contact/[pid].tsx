@@ -14,7 +14,8 @@ import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import Head from 'next/head';
 import SubmitButton from '@/components/shared/form/SubmitButton';
-import Toast from '@/components/shared/Toast';
+import dynamic from 'next/dynamic';
+import Skeleton from '@/components/shared/Skeleton';
 
 const mainContainerStyle = css({
   display: 'flex',
@@ -59,6 +60,13 @@ const mainContainerStyle = css({
       padding: `${theme.spacing.md} ${theme.spacing.xl}`,
     },
   },
+});
+
+// Lazy load toast component
+const ToastComponent = dynamic(() => import('@/components/shared/Toast'), {
+  loading: () => (
+    <Skeleton customClass={{ height: '40px', width: '100px' }}></Skeleton>
+  ),
 });
 
 /**
@@ -254,14 +262,14 @@ const EditContact = () => {
         </MainContainer>
       </div>
       {opentoast && !formError && (
-        <Toast
+        <ToastComponent
           text="Contact updated successfully!"
           variant="success"
           setOpenToast={setOpenToast}
         />
       )}
       {opentoast && formError && (
-        <Toast
+        <ToastComponent
           text="Failed to update contact"
           variant="error"
           setOpenToast={setOpenToast}

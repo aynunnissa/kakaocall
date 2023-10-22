@@ -29,7 +29,7 @@ interface IProps {
 
 const DropdownModal = dynamic(() => import('./DropdownModal'), {
   loading: () => (
-    <Skeleton customClass={{ height: '100px', width: '100px' }}></Skeleton>
+    <Skeleton customClass={{ height: '80px', width: '90px' }}></Skeleton>
   ),
 });
 
