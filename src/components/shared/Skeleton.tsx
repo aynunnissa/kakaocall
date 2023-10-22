@@ -1,14 +1,5 @@
-/** @jsxImportSource @emotion/react */
 import { css, keyframes } from '@emotion/react';
 import { theme } from '../../theme/theme';
-
-interface ICustomClass {
-  [key: string]: string;
-}
-
-interface IProps {
-  customClass: ICustomClass;
-}
 
 const shimmer = keyframes`
     0% {
@@ -42,6 +33,14 @@ const SkeletonBaseStyle = css({
     animation: `${shimmer} 1s linear infinite`,
   },
 });
+
+interface ICustomClass {
+  [key: string]: string;
+}
+
+interface IProps {
+  customClass: ICustomClass;
+}
 
 const Skeleton = ({ customClass }: IProps) => {
   const SkeletonStyle = css(SkeletonBaseStyle, {

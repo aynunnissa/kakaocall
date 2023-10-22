@@ -258,7 +258,7 @@ const ContactPage = () => {
         {!state.isLoadingContact && totalPage > 1 && !onSearchMode && (
           <div
             css={
-              visibleContacts.length + favoriteContacts.length < 10 &&
+              visibleContacts.length + favoriteContacts.length < 4 &&
               absolutePagination
             }
           >

@@ -3,7 +3,7 @@ import client from '@/lib/client';
 import { ContactProvider } from '@/store/context/contact-context';
 import '@/styles/globals.css';
 /**
- * Import icon fonts
+ * Important: Import icon fonts
  */
 import '@/styles/icons.css';
 import { ApolloProvider } from '@apollo/client';
