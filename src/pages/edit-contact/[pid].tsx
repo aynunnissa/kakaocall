@@ -14,6 +14,7 @@ import { IContact } from '@/store/types/contact';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import Head from 'next/head';
+import SubmitButton from '@/components/shared/form/SubmitButton';
 
 const containerStyle = css({
   minHeight: '100vh',
@@ -112,6 +113,7 @@ const EditContact = () => {
   const [currentContact, setCurrentContact] = useState<IContact>();
   const [phoneFields, setPhoneFields] = useState([{ number: '' }]);
   const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   /**
    * This query used to check if contact with the same Name already exists
@@ -155,12 +157,15 @@ const EditContact = () => {
       const name = `${contact.first_name} ${contact.last_name}`;
       const updatedName = `${firstName} ${lastName}`;
       if (name.toLowerCase().includes(updatedName.toLowerCase())) {
-        setFormError('Another contact with the same name already exists');
         return true;
       }
     });
 
-    if (existingContact) return;
+    if (existingContact) {
+      setFormError('Another contact with the same name already exists');
+      setIsSubmitting(false);
+      return;
+    }
 
     const getExistingContact = getContactList({
       variables: {
@@ -171,24 +176,28 @@ const EditContact = () => {
       },
     });
 
-    getExistingContact.then(result => {
-      if (result?.data?.contact?.length > 0) {
-        setFormError('Another contact with the same name already exists');
-      } else {
-        dispatch({
-          type: Types.Edit,
-          payload: {
-            contact: {
-              ...currentContact,
-              first_name: firstName,
-              last_name: lastName,
-              phones: phoneFields.filter(phone => phone.number),
+    getExistingContact
+      .then(result => {
+        if (result?.data?.contact?.length > 0) {
+          setFormError('Another contact with the same name already exists');
+        } else {
+          dispatch({
+            type: Types.Edit,
+            payload: {
+              contact: {
+                ...currentContact,
+                first_name: firstName.trim(),
+                last_name: lastName.trim(),
+                phones: phoneFields.filter(phone => phone.number),
+              },
             },
-          },
-        });
-        nav.push('/');
-      }
-    });
+          });
+          nav.push('/');
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   useEffect(() => {
@@ -258,15 +267,11 @@ const EditContact = () => {
                 </div>
                 {formError && <p css={errorTextStyle}>{formError}</p>}
 
-                <div>
-                  <button
-                    css={submitButtonStyle}
-                    disabled={!enteredName}
-                    aria-label="Submit Update"
-                  >
-                    Submit Update
-                  </button>
-                </div>
+                <SubmitButton
+                  text="Submit Update"
+                  isDisabled={!enteredName}
+                  isSubmitting={isSubmitting}
+                />
               </form>
             </div>
           </div>

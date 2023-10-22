@@ -12,10 +12,6 @@ const flexContainer = css({
   gap: theme.spacing.sm,
 });
 
-const contactContainer = css(flexContainer, {
-  justifyContent: 'space-between',
-});
-
 const gridContainer = css({
   display: 'grid',
   gridTemplateColumns: '[avatar] 4.5rem [contact] 3fr [actions] 1fr',

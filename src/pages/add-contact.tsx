@@ -7,65 +7,56 @@ import useInput from '@/hooks/use-input';
 import { useContact } from '@/store/context/contact-context';
 import { Types } from '@/store/action/action';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import GET_CONTACT_LIST from '@/graphql/queries/GET_CONTACTS';
 import { theme } from '@theme';
 import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import Head from 'next/head';
+import SubmitButton from '@/components/shared/form/SubmitButton';
 
 const mainContainerStyle = css({
   display: 'flex',
   justifyContent: 'center',
-});
 
-const formContainerStyle = css({
-  width: '450px',
-  maxWidth: '100%',
-  marginTop: theme.spacing.lg,
-  padding: `${theme.spacing.md} ${theme.spacing.lg}`,
-  borderRadius: theme.shape.rounded.xl,
-  boxShadow: theme.shadow.normal,
+  '.contact-form': {
+    width: '450px',
+    maxWidth: '100%',
+    marginTop: theme.spacing.lg,
+    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+    borderRadius: theme.shape.rounded.xl,
+    boxShadow: theme.shadow.normal,
+  },
+
+  '.form-title': {
+    fontSize: theme.text.xl,
+    fontWeight: 500,
+    color: theme.palette.primary.main,
+    textAlign: 'center',
+  },
+
+  '.form-input': {
+    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+    outline: 'none',
+    border: 'none',
+    borderRadius: '8px',
+    backgroundColor: theme.palette.grey[100],
+    width: '100%',
+    margin: '5px 0px',
+    boxSizing: 'border-box',
+    fontSize: theme.text.md,
+  },
+
+  '.input-error': {
+    color: theme.palette.error.main,
+    marginTop: theme.spacing.xs,
+    fontSize: theme.text.sm,
+  },
 
   [theme.breakpoints.sm]: {
-    padding: `${theme.spacing.md} ${theme.spacing.xl}`,
+    '.contact-form': {
+      padding: `${theme.spacing.md} ${theme.spacing.xl}`,
+    },
   },
-});
-
-const formTitleStyle = css({
-  fontSize: theme.text.xl,
-  fontWeight: 500,
-  color: theme.palette.primary.main,
-  textAlign: 'center',
-});
-
-const inputField = css({
-  padding: `${theme.spacing.md} ${theme.spacing.lg}`,
-  outline: 'none',
-  border: 'none',
-  borderRadius: '8px',
-  backgroundColor: theme.palette.grey[100],
-  width: '100%',
-  margin: '5px 0px',
-  boxSizing: 'border-box',
-  fontSize: theme.text.md,
-});
-
-const errorTextStyle = css({
-  color: theme.palette.error.main,
-  marginTop: theme.spacing.xs,
-  fontSize: theme.text.sm,
-});
-
-const submitButtonStyle = css({
-  border: 'none',
-  width: '100%',
-  margin: `${theme.spacing.lg} 0`,
-  padding: `${theme.spacing.md}`,
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.common.white,
-  borderRadius: theme.shape.rounded.lg,
-  cursor: 'pointer',
 });
 
 /**
@@ -86,6 +77,7 @@ const AddContact = () => {
   const router = useRouter();
   const [phoneFields, setPhoneFields] = useState([{ number: '' }]);
   const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [submitContact] = useMutation(addContact, {
     onCompleted({ insert_contact }) {
@@ -98,6 +90,8 @@ const AddContact = () => {
           },
         });
       }
+      setIsSubmitting(false);
+
       router.push('/');
     },
     onError(error) {
@@ -107,6 +101,7 @@ const AddContact = () => {
           'Another contact with the same phone number already exists'
         );
       }
+      setIsSubmitting(false);
     },
   });
 
@@ -126,8 +121,10 @@ const AddContact = () => {
 
   const formSubmissionHandler = (event: React.FormEvent) => {
     event.preventDefault();
+    setIsSubmitting(true);
 
     if (!enteredNameIsValid) {
+      setIsSubmitting(false);
       return;
     }
 
@@ -155,7 +152,10 @@ const AddContact = () => {
       }
     });
 
-    if (existingContact) return;
+    if (existingContact) {
+      setIsSubmitting(false);
+      return;
+    }
 
     const getExistingContact = getContactList({
       variables: {
@@ -171,8 +171,8 @@ const AddContact = () => {
       } else {
         submitContact({
           variables: {
-            first_name: firstName,
-            last_name: lastName,
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
             phones: phoneFields.filter(phone => phone.number),
           },
         });
@@ -195,24 +195,24 @@ const AddContact = () => {
         <Header />
         <MainContainer>
           <div css={mainContainerStyle}>
-            <div css={formContainerStyle}>
-              <h2 css={formTitleStyle}>Create Contact</h2>
+            <div className="contact-form">
+              <h2 className="form-title">Create Contact</h2>
               <form onSubmit={formSubmissionHandler}>
                 <div>
                   <input
                     type="text"
                     id="name"
-                    css={inputField}
+                    className="form-input"
                     onChange={nameChangedHandler}
                     onBlur={nameBlurHandler}
                     value={enteredName}
                     placeholder="Name"
                   />
                   {nameInputHasError && !enteredName && (
-                    <p css={errorTextStyle}>Name must not be empty</p>
+                    <p className="input-error">Name must not be empty</p>
                   )}
                   {nameInputHasError && enteredName && (
-                    <p css={errorTextStyle}>
+                    <p className="input-error">
                       Name should not contain any special characters.
                     </p>
                   )}
@@ -221,7 +221,7 @@ const AddContact = () => {
                       <input
                         key={`phoneInput-${ind}`}
                         id={`phoneInput-${ind}`}
-                        css={inputField}
+                        className="form-input"
                         onChange={e => handlePhoneField(e, ind)}
                         placeholder={`Phone ${ind + 1}`}
                         value={field.number}
@@ -229,17 +229,12 @@ const AddContact = () => {
                     );
                   })}
                 </div>
-                {formError && <p css={errorTextStyle}>{formError}</p>}
-
-                <div>
-                  <button
-                    css={submitButtonStyle}
-                    disabled={!enteredName}
-                    aria-label="Save Contact"
-                  >
-                    Save Contact
-                  </button>
-                </div>
+                {formError && <p className="input-error">{formError}</p>}
+                <SubmitButton
+                  text="Save Contact"
+                  isDisabled={!enteredNameIsValid}
+                  isSubmitting={isSubmitting}
+                />
               </form>
             </div>
           </div>
