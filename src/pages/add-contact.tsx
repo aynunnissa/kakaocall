@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
@@ -13,6 +13,7 @@ import Header from '@/components/layout/Header';
 import MainContainer from '@/components/layout/MainContainer';
 import Head from 'next/head';
 import SubmitButton from '@/components/shared/form/SubmitButton';
+import Toast from '@/components/shared/Toast';
 
 const mainContainerStyle = css({
   display: 'flex',
@@ -78,6 +79,7 @@ const AddContact = () => {
   const [phoneFields, setPhoneFields] = useState([{ number: '' }]);
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [opentoast, setOpenToast] = useState(false);
 
   const [submitContact] = useMutation(addContact, {
     onCompleted({ insert_contact }) {
@@ -91,6 +93,7 @@ const AddContact = () => {
         });
       }
       setIsSubmitting(false);
+      setOpenToast(true);
 
       router.push('/');
     },
@@ -102,6 +105,7 @@ const AddContact = () => {
         );
       }
       setIsSubmitting(false);
+      setOpenToast(true);
     },
   });
 
@@ -122,6 +126,7 @@ const AddContact = () => {
   const formSubmissionHandler = (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
+    setFormError('');
 
     if (!enteredNameIsValid) {
       setIsSubmitting(false);
@@ -240,6 +245,20 @@ const AddContact = () => {
           </div>
         </MainContainer>
       </div>
+      {opentoast && !formError && (
+        <Toast
+          text="Contact added successfully!"
+          variant="success"
+          setOpenToast={setOpenToast}
+        />
+      )}
+      {opentoast && formError && (
+        <Toast
+          text="Failed to add contact"
+          variant="error"
+          setOpenToast={setOpenToast}
+        />
+      )}
     </>
   );
 };
