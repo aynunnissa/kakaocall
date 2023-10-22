@@ -1,6 +1,8 @@
-## Getting Started
+# Progressive Web App
 
-# This website can be accessed on [KakaoCall](https://kakaocall.vercel.app/)
+## This website can be accessed on [KakaoCall](https://kakaocall.vercel.app/)
+
+You can add this app to your home screen when accessing this website on mobile device
 
 # Stacks:
 
@@ -17,7 +19,3 @@
 - Favorite Contact
 - Search Contact
 - Pagination
-
-## This is a Progressive Web App
-
-You can add this app to your home screen when accessing this website on mobile device
