@@ -111,4 +111,4 @@ function useContact() {
   return context;
 }
 
-export { ContactProvider, useContact };
+export { ContactProvider, useContact, ContactStateContext, contactReducer };
