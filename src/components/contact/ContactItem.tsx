@@ -78,7 +78,7 @@ interface IProps {
 
 const ContactItem = ({ contact, onDelete, toggleFavorite }: IProps) => {
   return (
-    <div css={gridContainer}>
+    <div css={gridContainer} data-testid="contact-item">
       <Avatar initial={contact.first_name.charAt(0)} />
       <div>
         <p css={contactName}>

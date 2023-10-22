@@ -108,7 +108,11 @@ const ContactActions = ({ onDelete, contactId }: IProps) => {
 
   const DeleteComponent = () => {
     return (
-      <button css={deleteIconButton} onClick={deleteContact}>
+      <button
+        aria-label="Delete contact"
+        css={deleteIconButton}
+        onClick={deleteContact}
+      >
         <span className="kao-trash-o"></span> Delete
       </button>
     );
